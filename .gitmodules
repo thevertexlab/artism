@@ -1,0 +1,6 @@
+[submodule "apps-legacy/AIDA-page"]
+	path = apps-legacy/AIDA-page
+	url = https://github.com/TTTyq/AIDA-page.git
+[submodule "apps-legacy/Ismism-Machine"]
+	path = apps-legacy/Ismism-Machine
+	url = https://github.com/UninstallAll/Ismism-Machine.git
