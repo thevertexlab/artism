@@ -67,7 +67,13 @@ def run_startup():
     """
     运行启动序列（同步版本）
     """
-    return asyncio.run(startup_sequence())
+    try:
+        # 尝试使用asyncio.run
+        return asyncio.run(startup_sequence())
+    except RuntimeError:
+        # 如果已经在事件循环中，则直接创建任务
+        loop = asyncio.get_event_loop()
+        return loop.run_until_complete(startup_sequence())
 
 
 if __name__ == "__main__":
