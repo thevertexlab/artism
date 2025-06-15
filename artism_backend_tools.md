@@ -9,6 +9,10 @@
 3. **test_api_endpoints.ps1** - 测试API端点的脚本
 4. **cursor_monitor.ps1** - 监控服务状态的脚本
 5. **command_timeout.ps1** - 命令超时控制脚本
+6. **run_and_test_backend.ps1** - 启动后端服务并测试API端点
+7. **test_db_connection.ps1** - 测试数据库连接和初始化数据库
+8. **test_api_endpoints_simple.ps1** - 简化版API端点测试脚本
+9. **start_and_test.ps1** - 启动后端服务并执行所有测试
 
 ## 使用方法
 
@@ -65,6 +69,52 @@
 - `-Command` - 要执行的命令
 - `-TimeoutSeconds` - 超时时间（秒），默认为60秒
 
+### 一键启动和测试
+
+如果您想一次性启动后端服务并执行所有测试，可以使用：
+
+```powershell
+.\start_and_test.ps1
+```
+
+参数说明：
+- `-BaseUrl` - 指定API基础URL，默认为http://localhost:8000
+- `-ForceUseMock` - 强制使用Mock数据库，默认为true
+- `-Verbose` - 显示详细输出
+- `-TimeoutSeconds` - 等待服务启动的超时时间（秒），默认为60秒
+
+### 后台运行服务
+
+如果您只想在后台启动服务并测试API端点，可以使用：
+
+```powershell
+.\run_and_test_backend.ps1
+```
+
+参数说明与`start_and_test.ps1`相同。
+
+### 测试数据库连接
+
+如果您只想测试数据库连接和初始化数据库，可以使用：
+
+```powershell
+.\test_db_connection.ps1
+```
+
+参数说明：
+- `-BaseUrl` - 指定API基础URL，默认为http://localhost:8000
+- `-Verbose` - 显示详细输出
+
+### 简化版API测试
+
+如果您想使用简化版的API测试脚本，可以使用：
+
+```powershell
+.\test_api_endpoints_simple.ps1
+```
+
+参数说明与`test_api_endpoints.ps1`相同。
+
 ## 常见问题解决
 
 ### MongoDB连接问题
@@ -98,4 +148,8 @@
 - `artism_backend.log` - 主启动脚本日志
 - `fix_artism_backend.log` - 修复脚本日志
 - `api_test.log` - API测试日志
-- `cursor_monitor.log` - 监控脚本日志 
+- `cursor_monitor.log` - 监控脚本日志
+- `run_test_backend.log` - 启动和测试脚本日志
+- `test_db_connection.log` - 数据库连接测试日志
+- `test_api_simple.log` - 简化版API测试日志
+- `start_and_test.log` - 启动和执行所有测试脚本日志 
