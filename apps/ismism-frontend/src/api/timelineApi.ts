@@ -1,4 +1,4 @@
-import axios from 'axios';
+import api from './axios';
 
 interface TimelineNode {
   id: string;
@@ -14,15 +14,6 @@ interface TimelineNode {
   position?: { x: number; y: number };
   tags?: string[];
 }
-
-// 配置axios基础URL
-const api = axios.create({
-  baseURL: 'http://localhost:3001/api', // 确保这个端口号与你的后端服务器端口一致
-  timeout: 10000,
-  headers: {
-    'Content-Type': 'application/json'
-  }
-});
 
 // 获取所有时间线节点
 export const fetchTimelineNodes = async (): Promise<TimelineNode[]> => {

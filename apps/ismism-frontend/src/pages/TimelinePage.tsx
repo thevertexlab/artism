@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import TimelineView from '../components/TimelineView';
 import Timeline from '../components/Timeline/Timeline';
 import { TimelineEvent } from '../components/Timeline/types';
+import { useTimelineStore } from '../timelineStore';
 
 interface TimelineItem {
   id: string;
@@ -16,69 +17,35 @@ interface TimelineItem {
 }
 
 const TimelinePage = () => {
-  // 这里可以从API或JSON文件获取时间线数据
-  const timelineItems: TimelineItem[] = [];
+  const { nodes, loading, error, fetchNodes } = useTimelineStore();
   const [viewMode, setViewMode] = useState<'classic' | 'interactive'>('interactive');
   
-  // 交互式时间线数据
-  const timelineEvents: TimelineEvent[] = [
-    {
-      id: '1',
-      date: new Date('2023-01-15'),
-      title: '项目启动',
-      description: '团队开始讨论项目计划和目标',
-      category: '规划'
-    },
-    {
-      id: '2',
-      date: new Date('2023-02-28'),
-      title: '需求分析',
-      description: '完成用户需求分析和功能规格说明',
-      category: '分析'
-    },
-    {
-      id: '3',
-      date: new Date('2023-04-10'),
-      title: '设计阶段',
-      description: '完成UI/UX设计和原型开发',
-      category: '设计'
-    },
-    {
-      id: '4',
-      date: new Date('2023-06-05'),
-      title: '开发里程碑',
-      description: '完成核心功能开发和单元测试',
-      category: '开发'
-    },
-    {
-      id: '5',
-      date: new Date('2023-07-20'),
-      title: '测试阶段',
-      description: '进行系统测试和用户验收测试',
-      category: '测试'
-    },
-    {
-      id: '6',
-      date: new Date('2023-09-01'),
-      title: '产品发布',
-      description: '正式发布产品并部署到生产环境',
-      category: '发布'
-    },
-    {
-      id: '7',
-      date: new Date('2023-10-15'),
-      title: '用户反馈',
-      description: '收集和分析用户反馈，规划后续迭代',
-      category: '反馈'
-    },
-    {
-      id: '8',
-      date: new Date('2023-12-01'),
-      title: '版本更新',
-      description: '发布新版本，包含用户反馈的改进',
-      category: '更新'
-    }
-  ];
+  // 从后端获取数据
+  useEffect(() => {
+    fetchNodes();
+  }, [fetchNodes]);
+  
+  // 将nodes数据转换为TimelineItem格式
+  const timelineItems: TimelineItem[] = nodes.map(node => ({
+    id: node.id,
+    title: node.title,
+    year: node.year,
+    description: node.description,
+    imageUrl: node.imageUrl || '',
+    artists: node.artists || [],
+    styleMovement: node.styleMovement,
+    influences: node.influences || [],
+    influencedBy: node.influencedBy || []
+  }));
+  
+  // 将nodes数据转换为TimelineEvent格式
+  const timelineEvents: TimelineEvent[] = nodes.map(node => ({
+    id: node.id,
+    date: new Date(node.year, 0, 1), // 将年份转换为日期对象
+    title: node.title,
+    description: node.description,
+    category: node.styleMovement
+  }));
 
   return (
     <div className="page-container">
@@ -117,15 +84,27 @@ const TimelinePage = () => {
       
       {/* 内容区域 */}
       <div className="p-4">
-        {viewMode === 'classic' ? (
+        {loading ? (
+          <div className="flex justify-center items-center h-64">
+            <p className="text-gray-600">加载数据中...</p>
+          </div>
+        ) : error ? (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+            <p>加载数据时出错: {error}</p>
+          </div>
+        ) : viewMode === 'classic' ? (
           <TimelineView items={timelineItems} />
         ) : (
           <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
-            <Timeline 
-              events={timelineEvents} 
-              height={400} 
-              className="mt-2"
-            />
+            {timelineEvents.length > 0 ? (
+              <Timeline 
+                events={timelineEvents} 
+                height={400} 
+                className="mt-2"
+              />
+            ) : (
+              <p className="text-center text-gray-600">没有找到时间线数据</p>
+            )}
             <div className="mt-8 text-center text-gray-600">
               <p>使用鼠标左右拖动时间线查看不同时间点的项目进展</p>
               <p className="text-sm mt-2">悬停在事件上可以查看详细信息</p>

@@ -12,7 +12,11 @@ const movementSchema = new mongoose.Schema({
   influences: [String],
   influencedBy: [String],
   images: [String],
-  tags: [String]
+  tags: [String],
+  position: {
+    x: { type: Number, default: 0 },
+    y: { type: Number, default: 0 }
+  }
 }, {
   timestamps: true,
   collection: 'art_movements',
@@ -31,7 +35,8 @@ const movementSchema = new mongoose.Schema({
         influences: ret.influences,
         influencedBy: ret.influencedBy,
         images: ret.images,
-        tags: ret.tags
+        tags: ret.tags,
+        position: ret.position
       };
     }
   }
