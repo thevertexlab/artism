@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 require('dotenv').config();
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/ismism_global_db';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/ismism-machine';
 
 const connectDB = async () => {
   try {

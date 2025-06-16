@@ -20,14 +20,14 @@ export const fetchTimelineNodes = async (): Promise<TimelineNode[]> => {
   try {
     const response = await api.get('/movements');
     return response.data.map((node: any) => ({
-      id: node._id || String(Date.now()),
-      title: node.name,
-      year: node.start_year,
+      id: node.id || node._id || String(Date.now()),
+      title: node.title || node.name,
+      year: node.year || node.start_year,
       description: node.description || '',
-      imageUrl: node.images?.[0] || `/TestData/${10001 + (Math.floor(Math.random() * 30))}.jpg`,
+      imageUrl: (node.images && node.images.length > 0) ? node.images[0] : `/TestData/${10001 + (Math.floor(Math.random() * 30))}.jpg`,
       images: node.images || Array(4).fill(0).map((_, i) => `/TestData/${10001 + (Math.floor(Math.random() * 30))}.jpg`),
-      artists: node.representative_artists || [],
-      styleMovement: node.name.toLowerCase().replace(/\s+/g, '-'),
+      artists: node.artists || node.representative_artists || [],
+      styleMovement: node.styleMovement || (node.title || node.name).toLowerCase().replace(/\s+/g, '-'),
       influences: node.influences || [],
       influencedBy: node.influencedBy || [],
       position: node.position || { x: 100 + Math.random() * 800, y: 100 + Math.random() * 300 },
@@ -45,14 +45,14 @@ export const fetchTimelineNodeById = async (id: string): Promise<TimelineNode> =
     const response = await api.get(`/movements/${id}`);
     const node = response.data;
     return {
-      id: node._id || String(Date.now()),
-      title: node.name,
-      year: node.start_year,
+      id: node.id || node._id || String(Date.now()),
+      title: node.title || node.name,
+      year: node.year || node.start_year,
       description: node.description || '',
-      imageUrl: node.images?.[0] || `/TestData/${10001 + (Math.floor(Math.random() * 30))}.jpg`,
+      imageUrl: (node.images && node.images.length > 0) ? node.images[0] : `/TestData/${10001 + (Math.floor(Math.random() * 30))}.jpg`,
       images: node.images || Array(4).fill(0).map((_, i) => `/TestData/${10001 + (Math.floor(Math.random() * 30))}.jpg`),
-      artists: node.representative_artists || [],
-      styleMovement: node.name.toLowerCase().replace(/\s+/g, '-'),
+      artists: node.artists || node.representative_artists || [],
+      styleMovement: node.styleMovement || (node.title || node.name).toLowerCase().replace(/\s+/g, '-'),
       influences: node.influences || [],
       influencedBy: node.influencedBy || [],
       position: node.position || { x: 100 + Math.random() * 800, y: 100 + Math.random() * 300 },
@@ -81,14 +81,14 @@ export const createNode = async (nodeData: Partial<TimelineNode>): Promise<Timel
     
     const node = response.data;
     return {
-      id: node._id || String(Date.now()),
-      title: node.name,
-      year: node.start_year,
+      id: node.id || node._id || String(Date.now()),
+      title: node.title || node.name,
+      year: node.year || node.start_year,
       description: node.description || '',
-      imageUrl: node.images?.[0] || `/TestData/${10001 + (Math.floor(Math.random() * 30))}.jpg`,
+      imageUrl: (node.images && node.images.length > 0) ? node.images[0] : `/TestData/${10001 + (Math.floor(Math.random() * 30))}.jpg`,
       images: node.images || Array(4).fill(0).map((_, i) => `/TestData/${10001 + (Math.floor(Math.random() * 30))}.jpg`),
-      artists: node.representative_artists || [],
-      styleMovement: node.name.toLowerCase().replace(/\s+/g, '-'),
+      artists: node.artists || node.representative_artists || [],
+      styleMovement: node.styleMovement || (node.title || node.name).toLowerCase().replace(/\s+/g, '-'),
       influences: node.influences || [],
       influencedBy: node.influencedBy || [],
       position: node.position || { x: 100 + Math.random() * 800, y: 100 + Math.random() * 300 },
@@ -117,14 +117,14 @@ export const updateNode = async (id: string, nodeData: Partial<TimelineNode>): P
     
     const node = response.data;
     return {
-      id: node._id || id,
-      title: node.name,
-      year: node.start_year,
+      id: node.id || node._id || id,
+      title: node.title || node.name,
+      year: node.year || node.start_year,
       description: node.description || '',
-      imageUrl: node.images?.[0] || `/TestData/${10001 + (Math.floor(Math.random() * 30))}.jpg`,
+      imageUrl: (node.images && node.images.length > 0) ? node.images[0] : `/TestData/${10001 + (Math.floor(Math.random() * 30))}.jpg`,
       images: node.images || Array(4).fill(0).map((_, i) => `/TestData/${10001 + (Math.floor(Math.random() * 30))}.jpg`),
-      artists: node.representative_artists || [],
-      styleMovement: node.name.toLowerCase().replace(/\s+/g, '-'),
+      artists: node.artists || node.representative_artists || [],
+      styleMovement: node.styleMovement || (node.title || node.name).toLowerCase().replace(/\s+/g, '-'),
       influences: node.influences || [],
       influencedBy: node.influencedBy || [],
       position: node.position || { x: 100 + Math.random() * 800, y: 100 + Math.random() * 300 },

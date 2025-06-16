@@ -5,43 +5,55 @@ const Artwork = require('../models/Artwork');
 // 获取所有艺术运动数据，包括相关的艺术家和作品信息
 exports.getAllArtMovements = async (req, res) => {
   try {
-    const movements = await Movement.find();
+    // 从movements集合获取所有艺术运动
+    const movements = await Movement.find().lean();
+    
+    // 使用Promise.all并行处理每个艺术运动
     const enrichedMovements = await Promise.all(movements.map(async (movement) => {
-      // 获取相关艺术家信息
+      // 从artists集合获取相关艺术家信息
       const artists = await Artist.find({
-        _id: { $in: movement.representative_artists }
-      });
+        _id: { $in: movement.representative_artists || [] }
+      }).lean();
       
-      // 获取相关作品信息
+      // 从artworks集合获取相关作品信息
       const artworks = await Artwork.find({
-        _id: { $in: movement.notable_artworks }
+        _id: { $in: movement.notable_artworks || [] }
+      }).lean();
+
+      // 处理图片数据
+      const processedImages = [];
+      
+      // 添加艺术运动自身的图片
+      if (movement.images && movement.images.length > 0) {
+        processedImages.push(...movement.images);
+      }
+      
+      // 添加艺术品的图片
+      artworks.forEach(artwork => {
+        if (artwork.images && artwork.images.length > 0) {
+          // 处理不同格式的图片数据
+          const imageUrls = artwork.images.map(img => 
+            typeof img === 'object' && img.url ? img.url : img
+          );
+          processedImages.push(...imageUrls);
+        }
       });
 
-      // 处理新的images数据结构
-      const processedImages = artworks.reduce((acc, artwork) => {
-        if (artwork.images && artwork.images.length > 0) {
-          // 如果images是对象数组，提取url属性
-          const imageUrls = artwork.images.map(img => typeof img === 'object' && img.url ? img.url : img);
-          return [...acc, ...imageUrls];
-        }
-        return acc;
-      }, []);
-
-      // 返回与IArtStyle接口匹配的数据结构
+      // 返回与前端接口匹配的数据结构
       return {
-        id: movement._id,
+        id: movement._id.toString(),
         title: movement.name,
         year: movement.start_year,
         description: movement.description,
-        characteristics: [], // 默认为空数组
+        characteristics: movement.characteristics || [],
         artists: artists.map(artist => artist.name),
-        images: processedImages, // 使用处理后的图片URL数组
+        images: processedImages,
         period: {
           start: movement.start_year,
           end: movement.end_year || new Date().getFullYear()
         },
         artworks: artworks.map(artwork => ({
-          id: artwork._id,
+          id: artwork._id.toString(),
           title: artwork.title,
           year: artwork.year_created || movement.start_year,
           artist: artists.find(a => a._id.toString() === artwork.artist_id?.toString())?.name || '未知艺术家',
@@ -50,11 +62,10 @@ exports.getAllArtMovements = async (req, res) => {
           description: artwork.description,
           medium: artwork.medium,
           location: artwork.location,
-          // 添加完整的图片信息
           fullImages: artwork.images
         })),
         keyArtists: artists.map(artist => ({
-          id: artist._id,
+          id: artist._id.toString(),
           name: artist.name,
           birthYear: artist.birth_year,
           deathYear: artist.death_year,
@@ -62,9 +73,10 @@ exports.getAllArtMovements = async (req, res) => {
           biography: artist.biography
         })),
         styleMovement: movement.name,
-        influences: [],
-        influencedBy: [],
-        tags: []
+        influences: movement.influences || [],
+        influencedBy: movement.influencedBy || [],
+        tags: movement.tags || [],
+        position: movement.position || { x: 0, y: 0 }
       };
     }));
 
@@ -78,7 +90,7 @@ exports.getAllArtMovements = async (req, res) => {
 // 获取单个艺术运动
 exports.getArtMovementById = async (req, res) => {
   try {
-    const movement = await Movement.findById(req.params.id);
+    const movement = await Movement.findById(req.params.id).lean();
     
     if (!movement) {
       return res.status(404).json({ message: '找不到该艺术运动' });
@@ -86,29 +98,38 @@ exports.getArtMovementById = async (req, res) => {
     
     // 获取相关艺术家信息
     const artists = await Artist.find({
-      _id: { $in: movement.representative_artists }
-    });
+      _id: { $in: movement.representative_artists || [] }
+    }).lean();
     
     // 获取相关作品信息
     const artworks = await Artwork.find({
-      _id: { $in: movement.notable_artworks }
+      _id: { $in: movement.notable_artworks || [] }
+    }).lean();
+    
+    // 处理图片数据
+    const processedImages = [];
+    
+    // 添加艺术运动自身的图片
+    if (movement.images && movement.images.length > 0) {
+      processedImages.push(...movement.images);
+    }
+    
+    // 添加艺术品的图片
+    artworks.forEach(artwork => {
+      if (artwork.images && artwork.images.length > 0) {
+        const imageUrls = artwork.images.map(img => 
+          typeof img === 'object' && img.url ? img.url : img
+        );
+        processedImages.push(...imageUrls);
+      }
     });
     
-    // 处理images数据
-    const processedImages = artworks.reduce((acc, artwork) => {
-      if (artwork.images && artwork.images.length > 0) {
-        const imageUrls = artwork.images.map(img => typeof img === 'object' && img.url ? img.url : img);
-        return [...acc, ...imageUrls];
-      }
-      return acc;
-    }, []);
-    
     const enrichedMovement = {
-      id: movement._id,
+      id: movement._id.toString(),
       title: movement.name,
       year: movement.start_year,
       description: movement.description,
-      characteristics: [],
+      characteristics: movement.characteristics || [],
       artists: artists.map(artist => artist.name),
       images: processedImages,
       period: {
@@ -116,7 +137,7 @@ exports.getArtMovementById = async (req, res) => {
         end: movement.end_year || new Date().getFullYear()
       },
       artworks: artworks.map(artwork => ({
-        id: artwork._id,
+        id: artwork._id.toString(),
         title: artwork.title,
         year: artwork.year_created || movement.start_year,
         artist: artists.find(a => a._id.toString() === artwork.artist_id?.toString())?.name || '未知艺术家',
@@ -128,7 +149,7 @@ exports.getArtMovementById = async (req, res) => {
         fullImages: artwork.images
       })),
       keyArtists: artists.map(artist => ({
-        id: artist._id,
+        id: artist._id.toString(),
         name: artist.name,
         birthYear: artist.birth_year,
         deathYear: artist.death_year,
@@ -138,7 +159,8 @@ exports.getArtMovementById = async (req, res) => {
       styleMovement: movement.name,
       influences: movement.influences || [],
       influencedBy: movement.influencedBy || [],
-      tags: movement.tags || []
+      tags: movement.tags || [],
+      position: movement.position || { x: 0, y: 0 }
     };
     
     res.json(enrichedMovement);
