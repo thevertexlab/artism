@@ -523,17 +523,17 @@ const Timeline: React.FC = () => {
     setSelectedNode(isSelecting ? node : null);
     
     // 如果该艺术主义有图片，显示第一张图片的大图预览
-    if (node.images && node.images.length > 0) {
-      const imgIndex = 0; // 默认显示第一张图片
-      const image = getThumbnailUrl(node, imgIndex);
-      const artistIndex = imgIndex % node.artists.length;
-      setPreviewImage({
-        src: image,
-        title: node.title,
-        artist: node.artists[artistIndex] || '未知艺术家',
-        year: node.year
-      });
-    }
+    // if (node.images && node.images.length > 0) {
+    //   const imgIndex = 0; // 默认显示第一张图片
+    //   const image = getThumbnailUrl(node, imgIndex);
+    //   const artistIndex = imgIndex % node.artists.length;
+    //   setPreviewImage({
+    //     src: image,
+    //     title: node.title,
+    //     artist: node.artists[artistIndex] || '未知艺术家',
+    //     year: node.year
+    //   });
+    // }
     
     // 保存当前位置
     savePositions();
@@ -846,7 +846,7 @@ const Timeline: React.FC = () => {
                             onClick={(e) => {
                               e.stopPropagation();
                               
-                              // 打开图片预览而不是导航
+                              // 恢复缩略图点击预览大图功能
                               const image = getThumbnailUrl(node, imgIndex);
                               const artistIndex = imgIndex % node.artists.length;
                               setPreviewImage({

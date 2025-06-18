@@ -4,16 +4,7 @@ import { Button } from './ui/button';
 import { Card, CardContent, CardFooter } from './ui/card';
 import { Eye, ArrowRight, ExternalLink } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-
-interface Artwork {
-  id: string;
-  title: string;
-  artist: string;
-  year: number;
-  imageUrl: string;
-  style: string;
-  description: string;
-}
+import { Artwork } from '../api/galleryApi';
 
 interface GalleryGridProps {
   artworks: Artwork[];
@@ -29,39 +20,11 @@ const GalleryGrid = ({ artworks, onSelect }: GalleryGridProps) => {
     target.src = 'https://via.placeholder.com/300x200?text=图片加载失败';
   };
 
-  // 获取艺术主义的ID
-  const getArtMovementId = (styleName: string): string => {
-    // 根据风格名称找到对应的ID
-    // 这里假设风格名称和ID的关系是：ID是风格名称的英文小写形式
-    // 实际项目中可能需要一个映射表或其他方式来获取正确的ID
-    const styleToIdMap: Record<string, string> = {
-      '印象派': 'impressionism',
-      '立体主义': 'cubism',
-      '超现实主义': 'surrealism',
-      '新印象主义': 'neo-impressionism',
-      '后印象派': 'post-impressionism',
-      '表现主义': 'expressionism',
-      '野兽派': 'fauvism',
-      '达达主义': 'dadaism',
-      '构成主义': 'constructivism',
-      '抽象表现主义': 'abstract-expressionism',
-      '波普艺术': 'pop-art',
-      '极简主义': 'minimalism',
-      '观念艺术': 'conceptual-art',
-      '新表现主义': 'neo-expressionism',
-      '装置艺术': 'installation-art',
-      '录像艺术': 'video-art',
-      '行为艺术': 'performance-art',
-      '数字艺术': 'digital-art'
-    };
-    
-    return styleToIdMap[styleName] || styleName.toLowerCase().replace(/\s+/g, '-');
-  };
-
   // 跳转到艺术主义详情页
-  const navigateToArtMovement = (style: string, e: React.MouseEvent) => {
+  const navigateToArtMovement = (style: string, styleMovement: string | undefined, e: React.MouseEvent) => {
     e.stopPropagation();
-    const artMovementId = getArtMovementId(style);
+    // 优先使用styleMovement，如果没有则使用风格名称转换
+    const artMovementId = styleMovement || style.toLowerCase().replace(/\s+/g, '-');
     navigate(`/art-movement/${artMovementId}`);
   };
 
@@ -137,7 +100,7 @@ const GalleryGrid = ({ artworks, onSelect }: GalleryGridProps) => {
                   variant="ghost" 
                   size="sm" 
                   className="text-primary hover:text-white hover:bg-primary/20 p-0 h-8 px-2 flex items-center gap-1"
-                  onClick={(e) => navigateToArtMovement(artwork.style, e)}
+                  onClick={(e) => navigateToArtMovement(artwork.style, artwork.styleMovement, e)}
                 >
                   <span className="text-xs">{artwork.style}</span>
                   <ArrowRight className="h-3 w-3" />

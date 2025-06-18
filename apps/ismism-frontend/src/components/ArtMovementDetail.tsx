@@ -59,6 +59,46 @@ const ArtMovementDetail: React.FC<ArtMovementDetailProps> = ({ artStyle, onClose
     return '/TestData/10040.jpg';
   };
 
+  // 新增：使用与Timeline组件相同的图片获取逻辑
+  const getThumbnailUrl = (node: IArtStyle, imgIndex: number) => {
+    // 检查是否已经有缓存的路径
+    const nodeImgKey = `${node.id}-${imgIndex}`;
+    if (imgCache.current && imgCache.current.has(nodeImgKey)) {
+      return imgCache.current.get(nodeImgKey) as string;
+    }
+    
+    // 没有缓存，尝试使用节点的图片
+    if (node.images && node.images.length > 0 && node.images[imgIndex]) {
+      // 处理图片URL
+      let imgUrl = node.images[imgIndex];
+      
+      // 如果是对象，提取URL属性
+      if (typeof imgUrl === 'object' && imgUrl !== null && 'url' in imgUrl) {
+        imgUrl = (imgUrl as any).url;
+      }
+      
+      // 处理相对路径
+      if (typeof imgUrl === 'string' && !imgUrl.startsWith('http') && !imgUrl.startsWith('/')) {
+        imgUrl = `/assets/${imgUrl}`;
+      }
+      
+      if (imgCache.current) {
+        imgCache.current.set(nodeImgKey, imgUrl as string);
+      }
+      return imgUrl as string;
+    }
+    
+    // 使用备用图片
+    const fallbackSrc = `/TestData/1004${imgIndex % 10}.jpg`;
+    if (imgCache.current) {
+      imgCache.current.set(nodeImgKey, fallbackSrc);
+    }
+    return fallbackSrc;
+  };
+
+  // 图片缓存
+  const imgCache = React.useRef<Map<string, string>>(new Map());
+
   // 处理图片加载错误
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
     const target = e.target as HTMLImageElement;
@@ -209,10 +249,10 @@ const ArtMovementDetail: React.FC<ArtMovementDetailProps> = ({ artStyle, onClose
               </div>
             ) : artworksToShow.length > 0 ? (
               <div className="relative">
-                {/* 作品图片 */}
+                {/* 作品图片 - 使用与Timeline组件相同的图片 */}
                 <div className="aspect-square overflow-hidden rounded-lg bg-black/20">
                   <img
-                    src={getImageUrl(artworksToShow[currentArtworkIndex])}
+                    src={getThumbnailUrl(artStyle, currentArtworkIndex)}
                     alt={artworksToShow[currentArtworkIndex]?.title || artStyle.title}
                     className="w-full h-full object-contain"
                     data-index={currentArtworkIndex}
@@ -294,7 +334,7 @@ const ArtMovementDetail: React.FC<ArtMovementDetailProps> = ({ artStyle, onClose
                     onClick={() => setCurrentArtworkIndex(index)}
                   >
                     <img
-                      src={getImageUrl(artwork)}
+                      src={getThumbnailUrl(artStyle, index)}
                       alt={artwork.title}
                       className="w-full h-24 object-cover"
                       data-index={index}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
-import Gallery from './Gallery';
+import IsmismIntro from './IsmismIntro';
 import SimpleNavbar from './SimpleNavbar';
 import { useNavigate } from 'react-router-dom';
 
@@ -20,12 +20,12 @@ const formatTextWithLineBreaks = (text: string) => {
 };
 
 const HomePage: React.FC = () => {
-  const [showGallery, setShowGallery] = useState(false);
+  const [showIntro, setShowIntro] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [isFirstPhrase, setIsFirstPhrase] = useState(true);
   const [isAutoSwitch, setIsAutoSwitch] = useState(true);
-  const galleryRef = useRef<HTMLDivElement>(null);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const introRef = useRef<HTMLDivElement>(null);
+  const intervalRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const navigate = useNavigate();
 
   // 监听滚动事件
@@ -34,7 +34,7 @@ const HomePage: React.FC = () => {
       const scrollPosition = window.scrollY;
       if (scrollPosition > 100 && !scrolled) {
         setScrolled(true);
-        setShowGallery(true);
+        setShowIntro(true);
       } else if (scrollPosition <= 100 && scrolled) {
         setScrolled(false);
       }
@@ -73,11 +73,11 @@ const HomePage: React.FC = () => {
     }, 5000);
   };
 
-  // 下滑到画廊
-  const scrollToGallery = () => {
-    setShowGallery(true);
-    if (galleryRef.current) {
-      galleryRef.current.scrollIntoView({ behavior: 'smooth' });
+  // 下滑到介绍部分
+  const scrollToIntro = () => {
+    setShowIntro(true);
+    if (introRef.current) {
+      introRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
@@ -167,10 +167,10 @@ const HomePage: React.FC = () => {
               transition={{ delay: 1, duration: 0.5 }}
             >
               <button
-                onClick={scrollToGallery}
+                onClick={scrollToIntro}
                 className="flex flex-col items-center text-gray-300 hover:text-white transition-colors group mt-20"
               >
-                <span className="mb-3 text-lg group-hover:text-blue-300 transition-colors">探索画廊</span>
+                <span className="mb-3 text-lg group-hover:text-blue-300 transition-colors">简介</span>
                 <motion.div
                   animate={{ y: [0, 10, 0] }}
                   transition={{ repeat: Infinity, duration: 1.5 }}
@@ -184,17 +184,17 @@ const HomePage: React.FC = () => {
         </div>
       </motion.div>
 
-      {/* 画廊部分 */}
-      <div ref={galleryRef} className="min-h-screen z-10 relative">
+      {/* 主义主义介绍部分 */}
+      <div ref={introRef} className="min-h-screen z-10 relative">
         <AnimatePresence>
-          {showGallery && (
+          {showIntro && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <Gallery />
+              <IsmismIntro />
             </motion.div>
           )}
         </AnimatePresence>

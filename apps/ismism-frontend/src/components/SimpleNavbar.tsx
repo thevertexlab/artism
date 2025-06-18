@@ -54,18 +54,6 @@ const SimpleNavbar: React.FC<SimpleNavbarProps> = ({ onMenuClick }) => {
               </NavLink>
               
               <NavLink
-                to="/gallery"
-                className={({ isActive }: NavLinkStateProps) => 
-                  `flex items-center px-3 py-1.5 rounded-lg ${isActive 
-                    ? 'bg-gradient-to-r from-blue-500/15 to-blue-500/5 text-blue-400 font-medium' 
-                    : 'hover:bg-white/5 text-gray-200'} transition-all duration-200`
-                }
-              >
-                <Palette className="h-4 w-4 mr-1.5" />
-                <span>艺术主义画廊</span>
-              </NavLink>
-
-              <NavLink
                 to="/timeline"
                 className={({ isActive }: NavLinkStateProps) => 
                   `flex items-center px-3 py-1.5 rounded-lg ${isActive 
@@ -75,6 +63,18 @@ const SimpleNavbar: React.FC<SimpleNavbarProps> = ({ onMenuClick }) => {
               >
                 <Clock className="h-4 w-4 mr-1.5" />
                 <span>时间线视图</span>
+              </NavLink>
+              
+              <NavLink
+                to="/gallery"
+                className={({ isActive }: NavLinkStateProps) => 
+                  `flex items-center px-3 py-1.5 rounded-lg ${isActive 
+                    ? 'bg-gradient-to-r from-blue-500/15 to-blue-500/5 text-blue-400 font-medium' 
+                    : 'hover:bg-white/5 text-gray-200'} transition-all duration-200`
+                }
+              >
+                <Palette className="h-4 w-4 mr-1.5" />
+                <span>艺术主义画廊</span>
               </NavLink>
             </div>
         </div>
@@ -126,19 +126,6 @@ const SimpleNavbar: React.FC<SimpleNavbarProps> = ({ onMenuClick }) => {
               </NavLink>
               
               <NavLink
-                to="/gallery"
-                className={({ isActive }: NavLinkStateProps) => 
-                  `flex items-center px-4 py-2 rounded-lg ${isActive 
-                    ? 'bg-gradient-to-r from-blue-500/15 to-blue-500/5 text-blue-400 font-medium' 
-                    : 'hover:bg-white/5 text-gray-200'} transition-all duration-200`
-                }
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                <Palette className="h-4 w-4 mr-2" />
-                <span>艺术主义画廊</span>
-              </NavLink>
-
-              <NavLink
                 to="/timeline"
                 className={({ isActive }: NavLinkStateProps) => 
                   `flex items-center px-4 py-2 rounded-lg ${isActive 
@@ -149,6 +136,19 @@ const SimpleNavbar: React.FC<SimpleNavbarProps> = ({ onMenuClick }) => {
               >
                 <Clock className="h-4 w-4 mr-2" />
                 <span>时间线视图</span>
+              </NavLink>
+              
+              <NavLink
+                to="/gallery"
+                className={({ isActive }: NavLinkStateProps) => 
+                  `flex items-center px-4 py-2 rounded-lg ${isActive 
+                    ? 'bg-gradient-to-r from-blue-500/15 to-blue-500/5 text-blue-400 font-medium' 
+                    : 'hover:bg-white/5 text-gray-200'} transition-all duration-200`
+                }
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <Palette className="h-4 w-4 mr-2" />
+                <span>艺术主义画廊</span>
               </NavLink>
             </div>
           </motion.div>

@@ -1,24 +1,35 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { List, LayoutGrid, ArrowUpDown, Sparkles } from 'lucide-react';
 import GalleryGrid from '../components/GalleryGrid';
-import galleryImages from '../data/galleryImages.json';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../components/ui/card';
-
-interface Artwork {
-  id: string;
-  title: string;
-  artist: string;
-  year: number;
-  imageUrl: string;
-  style: string;
-  description: string;
-}
+import { fetchAllArtworks, Artwork } from '../api/galleryApi';
 
 const GalleryPage = () => {
   const [selectedArtwork, setSelectedArtwork] = useState<Artwork | null>(null);
-  const artworks = galleryImages as Artwork[];
+  const [artworks, setArtworks] = useState<Artwork[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // 获取艺术作品数据
+  useEffect(() => {
+    const loadArtworks = async () => {
+      try {
+        setLoading(true);
+        const data = await fetchAllArtworks();
+        setArtworks(data);
+        setError(null);
+      } catch (err) {
+        console.error('Failed to fetch artworks:', err);
+        setError('加载艺术作品失败，请稍后再试');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadArtworks();
+  }, []);
 
   // 关闭详情模态框
   const closeArtworkDetails = () => {
@@ -69,7 +80,24 @@ const GalleryPage = () => {
         transition={{ duration: 0.5, delay: 0.2 }}
         className="p-4"
       >
-        <GalleryGrid artworks={artworks} onSelect={setSelectedArtwork} />
+        {loading ? (
+          <div className="flex justify-center items-center h-64">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+          </div>
+        ) : error ? (
+          <div className="text-center p-8 text-red-400">
+            <p>{error}</p>
+            <Button 
+              variant="outline" 
+              className="mt-4"
+              onClick={() => fetchAllArtworks().then(setArtworks).catch(() => {})}
+            >
+              重试
+            </Button>
+          </div>
+        ) : (
+          <GalleryGrid artworks={artworks} onSelect={setSelectedArtwork} />
+        )}
       </motion.div>
       
       {/* 作品详情模态框 */}
@@ -135,7 +163,14 @@ const GalleryPage = () => {
               </CardContent>
               
               <CardFooter className="flex-wrap gap-2 border-t border-border/40">
-                <Button className="gap-2 bg-gradient-to-r from-primary to-secondary text-white" variant="default">
+                <Button 
+                  className="gap-2 bg-gradient-to-r from-primary to-secondary text-white" 
+                  variant="default"
+                  onClick={() => {
+                    closeArtworkDetails();
+                    window.location.href = `/timeline`;
+                  }}
+                >
                   <Sparkles className="h-4 w-4" />
                   在时间线查看
                 </Button>
