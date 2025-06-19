@@ -56,6 +56,9 @@ function Start-BackendJob {
     } catch {
         Write-Log "Artism Backend启动失败: $_" "ERROR"
         return $null
+    } finally {
+        # 返回到原始目录
+        Set-Location -Path $PSScriptRoot
     }
 }
 
@@ -108,7 +111,7 @@ function Test-ApiEndpoint {
             ContentType = "application/json"
         }
         
-        if ($Body -ne $null) {
+        if ($null -ne $Body) {
             $jsonBody = $Body | ConvertTo-Json -Depth 10
             $params.Add("Body", $jsonBody)
         }
@@ -154,7 +157,7 @@ Write-Log "Artism Backend启动和测试脚本开始执行" "INFO"
 # 启动后端作为后台作业
 $backendJob = Start-BackendJob
 
-if ($backendJob -eq $null) {
+if ($null -eq $backendJob) {
     Write-Log "无法启动后端服务，脚本终止" "ERROR"
     exit 1
 }

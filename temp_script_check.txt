@@ -1,0 +1,111 @@
+﻿# Artism å‰åŽç«¯åŒæ—¶å¯åŠ¨è„šæœ¬
+
+$logFile = "artism_full_stack.log"
+
+function Write-Log {
+    param (
+        [string]$Message,
+        [string]$Level = "INFO"
+    )
+    
+    $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
+    $logEntry = "[$timestamp] [$Level] $Message"
+    
+    # è¾“å‡ºåˆ°æŽ§åˆ¶å°
+    switch ($Level) {
+        "ERROR" { Write-Host $logEntry -ForegroundColor Red }
+        "WARNING" { Write-Host $logEntry -ForegroundColor Yellow }
+        "SUCCESS" { Write-Host $logEntry -ForegroundColor Green }
+        default { Write-Host $logEntry }
+    }
+    
+    # å†™å…¥æ—¥å¿—æ–‡ä»¶
+    Add-Content -Path $logFile -Value $logEntry
+}
+
+function Start-Backend {
+    Write-Log "å¯åŠ¨Artism Backend..." "INFO"
+    
+    try {
+        # ä¿å­˜å½“å‰ç›®å½•
+        $originalLocation = Get-Location
+        
+        # åˆ‡æ¢åˆ°åŽç«¯ç›®å½•
+        Set-Location -Path "apps/artism-backend"
+        
+        # è®¾ç½®çŽ¯å¢ƒå˜é‡
+        $env:USE_MOCK_DB = "True"
+        Write-Log "ä½¿ç”¨Mockæ•°æ®åº“" "INFO"
+        
+        # å¯åŠ¨æœåŠ¡
+        Write-Log "æ‰§è¡Œå‘½ä»¤: python main.py" "INFO"
+        Start-Process -FilePath "python" -ArgumentList "main.py" -NoNewWindow
+        
+        Write-Log "Artism Backendå¯åŠ¨æˆåŠŸ" "SUCCESS"
+        return $true
+    } catch {
+        Write-Log "Artism Backendå¯åŠ¨å¤±è´¥: $_" "ERROR"
+        return $false
+    } finally {
+        # è¿”å›žåˆ°åŽŸå§‹ç›®å½•
+        Set-Location -Path $originalLocation
+    }
+}
+
+function Start-Frontend {
+    Write-Log "å¯åŠ¨AIDA Frontend..." "INFO"
+    
+    try {
+        # ä¿å­˜å½“å‰ç›®å½•
+        $originalLocation = Get-Location
+        
+        # åˆ‡æ¢åˆ°å‰ç«¯ç›®å½•
+        Set-Location -Path "apps/aida-frontend"
+        
+        # å¯åŠ¨æœåŠ¡
+        Write-Log "æ‰§è¡Œå‘½ä»¤: npm run dev" "INFO"
+        Start-Process -FilePath "npm" -ArgumentList "run", "dev" -NoNewWindow
+        
+        Write-Log "AIDA Frontendå¯åŠ¨æˆåŠŸ" "SUCCESS"
+        return $true
+    } catch {
+        Write-Log "AIDA Frontendå¯åŠ¨å¤±è´¥: $_" "ERROR"
+        return $false
+    } finally {
+        # è¿”å›žåˆ°åŽŸå§‹ç›®å½•
+        Set-Location -Path $originalLocation
+    }
+}
+
+# ä¸»ç¨‹åº
+Clear-Host
+Write-Log "Artism å…¨æ ˆå¯åŠ¨å·¥å…·" "INFO"
+
+# å¯åŠ¨åŽç«¯
+$backendResult = Start-Backend
+
+if (-not $backendResult) {
+    Write-Log "åŽç«¯å¯åŠ¨å¤±è´¥ï¼Œæ˜¯å¦ç»§ç»­å¯åŠ¨å‰ç«¯ï¼Ÿ(Y/N)" "WARNING"
+    $continue = Read-Host
+    if ($continue -ne "Y" -and $continue -ne "y") {
+        Write-Log "æ“ä½œå–æ¶ˆ" "INFO"
+        exit
+    }
+}
+
+# ç­‰å¾…å‡ ç§’ç¡®ä¿åŽç«¯å¯åŠ¨
+Start-Sleep -Seconds 3
+
+# å¯åŠ¨å‰ç«¯
+$frontendResult = Start-Frontend
+
+if (-not $frontendResult) {
+    Write-Log "å‰ç«¯å¯åŠ¨å¤±è´¥" "ERROR"
+} else {
+    Write-Log "å‰åŽç«¯å‡å·²æˆåŠŸå¯åŠ¨" "SUCCESS"
+    Write-Log "åŽç«¯APIåœ°å€: http://localhost:8000" "INFO"
+    Write-Log "å‰ç«¯åœ°å€: http://localhost:3000" "INFO"
+}
+
+Write-Log "æŒ‰ä»»æ„é”®é€€å‡ºè„šæœ¬..." "INFO"
+$null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown") 
