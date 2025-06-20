@@ -5,7 +5,7 @@ import { ArrowLeft, X, Calendar, User, Clock, Tag, Lightbulb } from 'lucide-reac
 import { Button } from '../components/ui/button';
 import GalleryGrid from '../components/GalleryGrid';
 
-// 导入本地数据库
+// Import local database
 import artStylesData from '../../data/artStyles.json';
 
 interface Artwork {
@@ -31,26 +31,26 @@ interface ArtStyle {
   images?: string[];
 }
 
-// 将artStyle数据转换为Gallery组件所需的Artwork格式
+// Convert artStyle data to Artwork format required by Gallery component
 const convertArtStyleToArtwork = (artStyle: ArtStyle): Artwork[] => {
-  // 从艺术风格创建艺术品对象，为每个艺术家创建一个作品
+  // Create artwork objects from art style, one for each artist
   return artStyle.artists.map((artist: string, index: number) => {
-    // 确定图片URL
+    // Determine image URL
     let imageUrl = '';
     
-    // 如果artStyle有images属性并且有足够的图片，使用对应的图片
+    // If artStyle has images property and enough images, use corresponding image
     if (artStyle.images && artStyle.images.length > 0) {
-      // 为每个艺术家选择不同的图片，确保不越界
+      // Select different image for each artist, ensure no out of bounds
       const imageIndex = index % artStyle.images.length;
       imageUrl = artStyle.images[imageIndex];
     } else {
-      // 使用TestData中的测试图片作为备份
+      // Use test images from TestData as backup
       imageUrl = `/TestData/${10001 + (index % 30)}.jpg`;
     }
     
     return {
       id: `${artStyle.id}-${index}`,
-      title: `${artist}的${artStyle.title}作品`,
+      title: `${artist}'s ${artStyle.title} work`,
       artist: artist,
       year: artStyle.year,
       imageUrl: imageUrl,
@@ -71,12 +71,12 @@ const ArtMovementPage = () => {
   const [activeTab, setActiveTab] = useState<'description' | 'artists' | 'influences'>('description');
   const [imageLoaded, setImageLoaded] = useState(false);
 
-  // 加载艺术主义数据
+  // Load art movement data
   useEffect(() => {
     setLoading(true);
     setImageLoaded(false);
     
-    // 尝试动态导入artStylesWithImages.json
+    // Try to dynamically import artStylesWithImages.json
     const loadArtStylesWithImages = async () => {
       try {
         const response = await fetch('/artStylesWithImages.json');
@@ -84,14 +84,14 @@ const ArtMovementPage = () => {
           const data = await response.json();
           setArtStylesWithImages(data);
         } else {
-          console.warn('无法加载artStylesWithImages.json，使用默认数据');
+          console.warn('Unable to load artStylesWithImages.json, using default data');
           setArtStylesWithImages(artStylesData);
         }
       } catch (error) {
-        console.warn('加载artStylesWithImages.json出错，使用默认数据', error);
+        console.warn('Error loading artStylesWithImages.json, using default data', error);
         setArtStylesWithImages(artStylesData);
       } finally {
-        // 加载完成后查找当前艺术主义
+        // Find current art movement after loading is complete
         findCurrentArtStyle();
       }
     };
@@ -99,7 +99,7 @@ const ArtMovementPage = () => {
     loadArtStylesWithImages();
   }, [id]);
 
-  // 查找当前艺术主义 - 使用useCallback优化
+  // Find current art movement - optimized with useCallback
   const findCurrentArtStyle = useCallback(() => {
     if (!id) {
       setLoading(false);
@@ -113,37 +113,37 @@ const ArtMovementPage = () => {
       const artworksFromStyle = convertArtStyleToArtwork(foundArtStyle);
       setArtworks(artworksFromStyle);
     } else {
-      console.error(`未找到ID为${id}的艺术主义`);
+      console.error(`Art movement with ID ${id} not found`);
     }
     
     setLoading(false);
   }, [id, artStylesWithImages]);
 
-  // 当artStylesWithImages更新时，重新查找当前艺术主义
+  // When artStylesWithImages updates, find current art movement again
   useEffect(() => {
     findCurrentArtStyle();
   }, [findCurrentArtStyle]);
 
-  // 返回到画廊页面
+  // Return to gallery page
   const goBackToGallery = useCallback(() => {
     navigate('/gallery');
   }, [navigate]);
 
-  // 返回上一页
+  // Go back to previous page
   const goBack = useCallback(() => {
     navigate(-1);
   }, [navigate]);
 
-  // 处理图片加载完成
+  // Handle image load complete
   const handleImageLoaded = useCallback(() => {
     setImageLoaded(true);
   }, []);
 
-  // 处理图片加载错误
+  // Handle image load error
   const handleImageError = useCallback((e: React.SyntheticEvent<HTMLImageElement>, index: number) => {
     const target = e.target as HTMLImageElement;
     target.src = `/TestData/${10001 + (index % 30)}.jpg`;
-    target.onerror = null; // 防止无限循环
+    target.onerror = null; // Prevent infinite loop
     setImageLoaded(true);
   }, []);
 
@@ -152,7 +152,7 @@ const ArtMovementPage = () => {
       <div className="fixed inset-0 z-50 flex justify-center items-center bg-black/60 backdrop-blur-sm">
         <div className="relative flex flex-col items-center justify-center gap-3 p-6 bg-black/40 rounded-xl border border-white/10 shadow-2xl">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-          <p className="text-white/60 animate-pulse">加载艺术主义信息...</p>
+          <p className="text-white/60 animate-pulse">Loading art movement information...</p>
         </div>
       </div>
     );
@@ -162,14 +162,14 @@ const ArtMovementPage = () => {
     return (
       <div className="fixed inset-0 z-50 flex justify-center items-center bg-black/60 backdrop-blur-sm">
         <div className="relative p-6 bg-black/40 rounded-xl border border-white/10 shadow-2xl text-center max-w-lg">
-          <h2 className="text-2xl font-bold text-red-500 mb-4">未找到艺术主义</h2>
-          <p className="text-gray-400 mb-6">无法找到指定的艺术主义信息，可能该内容已被移除或ID不正确。</p>
+          <h2 className="text-2xl font-bold text-red-500 mb-4">Art Movement Not Found</h2>
+          <p className="text-gray-400 mb-6">The specified art movement could not be found. It may have been removed or the ID is incorrect.</p>
           <div className="flex justify-center gap-4">
             <Button variant="destructive" className="mr-2" onClick={goBack}>
-              返回
+              Go Back
             </Button>
             <Button variant="outline" onClick={goBackToGallery}>
-              回到画廊
+              Return to Gallery
             </Button>
           </div>
         </div>
@@ -198,7 +198,7 @@ const ArtMovementPage = () => {
         initial={{ y: 50 }}
         animate={{ y: 0 }}
       >
-        {/* 头部导航 */}
+        {/* Header navigation */}
         <div className="p-4 border-b border-white/10 flex justify-between items-center">
           <div className="flex items-center">
             <Button 
@@ -208,7 +208,7 @@ const ArtMovementPage = () => {
               onClick={goBack}
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
-              返回时间线
+              Back to Timeline
             </Button>
             <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
               {artStyle.title}
@@ -216,7 +216,7 @@ const ArtMovementPage = () => {
             <div className="flex items-center ml-4">
               <span className="inline-flex items-center px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 text-sm">
                 <Calendar className="h-3 w-3 mr-1" />
-                {artStyle.year}年
+                {artStyle.year}
               </span>
             </div>
           </div>
@@ -231,30 +231,30 @@ const ArtMovementPage = () => {
           </Button>
         </div>
 
-        {/* 内容区域 - 可滚动 */}
+        {/* Content area - scrollable */}
         <div className="flex-1 overflow-auto">
           <div className="grid grid-cols-1 lg:grid-cols-7 h-full">
-            {/* 左侧：艺术主义介绍，调整为更宽 */}
+            {/* Left side: Art movement introduction, adjusted to be wider */}
             <div className="lg:col-span-5 p-6 overflow-y-auto">
-              {/* 标签页导航 */}
+              {/* Tab navigation */}
               <div className="flex border-b border-white/10 mb-6">
                 <button
                   className={`px-4 py-2 ${activeTab === 'description' ? 'text-blue-400 border-b-2 border-blue-400' : 'text-white/60 hover:text-white/90'}`}
                   onClick={() => setActiveTab('description')}
                 >
-                  描述
+                  Description
                 </button>
                 <button
                   className={`px-4 py-2 ${activeTab === 'artists' ? 'text-blue-400 border-b-2 border-blue-400' : 'text-white/60 hover:text-white/90'}`}
                   onClick={() => setActiveTab('artists')}
                 >
-                  艺术家
+                  Artists
                 </button>
                 <button
                   className={`px-4 py-2 ${activeTab === 'influences' ? 'text-blue-400 border-b-2 border-blue-400' : 'text-white/60 hover:text-white/90'}`}
                   onClick={() => setActiveTab('influences')}
                 >
-                  影响关系
+                  Influences
                 </button>
               </div>
 
@@ -274,7 +274,7 @@ const ArtMovementPage = () => {
                     
                     {artStyle.tags.length > 0 && (
                       <div>
-                        <h3 className="flex items-center text-sm text-gray-400 mb-2"><Tag className="h-4 w-4 mr-1" /> 关键词</h3>
+                        <h3 className="flex items-center text-sm text-gray-400 mb-2"><Tag className="h-4 w-4 mr-1" /> Keywords</h3>
                         <div className="flex flex-wrap gap-2 mt-1">
                           {artStyle.tags.map((tag, index) => (
                             <span 
@@ -300,7 +300,7 @@ const ArtMovementPage = () => {
                     className="space-y-6"
                   >
                     <div>
-                      <h3 className="flex items-center text-sm text-gray-400 mb-2"><User className="h-4 w-4 mr-1" /> 主要艺术家</h3>
+                      <h3 className="flex items-center text-sm text-gray-400 mb-2"><User className="h-4 w-4 mr-1" /> Main Artists</h3>
                       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 mt-2">
                         {artStyle.artists.map((artist, index) => (
                           <div
@@ -335,7 +335,7 @@ const ArtMovementPage = () => {
                   >
                     {artStyle.influences.length > 0 && (
                       <div>
-                        <h3 className="flex items-center text-sm text-gray-400 mb-2"><Lightbulb className="h-4 w-4 mr-1" /> 影响来源</h3>
+                        <h3 className="flex items-center text-sm text-gray-400 mb-2"><Lightbulb className="h-4 w-4 mr-1" /> Influenced By</h3>
                         <div className="flex flex-wrap gap-2 mt-1">
                           {artStyle.influences.map((influence, index) => (
                             <span 
@@ -351,7 +351,7 @@ const ArtMovementPage = () => {
                     
                     {artStyle.influencedBy.length > 0 && (
                       <div className="mt-6">
-                        <h3 className="flex items-center text-sm text-gray-400 mb-2"><Lightbulb className="h-4 w-4 mr-1" /> 受影响于</h3>
+                        <h3 className="flex items-center text-sm text-gray-400 mb-2"><Lightbulb className="h-4 w-4 mr-1" /> Influences</h3>
                         <div className="flex flex-wrap gap-2 mt-1">
                           {artStyle.influencedBy.map((influenced, index) => (
                             <span 
@@ -369,9 +369,9 @@ const ArtMovementPage = () => {
               </AnimatePresence>
             </div>
             
-            {/* 右侧：艺术作品展示 */}
+            {/* Right side: Artwork display */}
             <div className="lg:col-span-2 bg-black/40 border-l border-white/10 p-4 overflow-y-auto max-h-[calc(90vh-4rem)]">
-              <h3 className="flex items-center text-lg font-medium mb-4"><Clock className="h-4 w-4 mr-2" />代表作品</h3>
+              <h3 className="flex items-center text-lg font-medium mb-4"><Clock className="h-4 w-4 mr-2" /> Representative Works</h3>
               
               <div className="space-y-3">
                 {artworks.map((artwork, index) => (

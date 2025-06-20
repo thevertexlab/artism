@@ -33,12 +33,12 @@ const SimpleNavbar: React.FC<SimpleNavbarProps> = ({ onMenuClick }) => {
             <NavLink to="/" className="flex items-center">
               <Zap className="h-6 w-6 mr-2 text-primary" />
               <h1 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-                艺术主义机器
+                Ism Machine
               </h1>
             </NavLink>
           </motion.div>
 
-            {/* 固定导航链接 - 桌面端 */}
+            {/* Desktop navigation links */}
             <div className="hidden md:flex items-center space-x-2">
               <NavLink
                 to="/"
@@ -50,7 +50,7 @@ const SimpleNavbar: React.FC<SimpleNavbarProps> = ({ onMenuClick }) => {
                 end
               >
                 <Home className="h-4 w-4 mr-1.5" />
-                <span>主页</span>
+                <span>Home</span>
               </NavLink>
               
               <NavLink
@@ -62,7 +62,7 @@ const SimpleNavbar: React.FC<SimpleNavbarProps> = ({ onMenuClick }) => {
                 }
               >
                 <Clock className="h-4 w-4 mr-1.5" />
-                <span>时间线视图</span>
+                <span>Timeline</span>
               </NavLink>
               
               <NavLink
@@ -74,13 +74,13 @@ const SimpleNavbar: React.FC<SimpleNavbarProps> = ({ onMenuClick }) => {
                 }
               >
                 <Palette className="h-4 w-4 mr-1.5" />
-                <span>艺术主义画廊</span>
+                <span>Art Gallery</span>
               </NavLink>
             </div>
         </div>
         
         <div className="flex items-center gap-4">
-          {/* 移动端菜单按钮 */}
+          {/* Mobile menu button */}
           <motion.div 
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -100,7 +100,7 @@ const SimpleNavbar: React.FC<SimpleNavbarProps> = ({ onMenuClick }) => {
       </div>
     </header>
       
-      {/* 移动端导航菜单 */}
+      {/* Mobile navigation menu */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
@@ -122,7 +122,7 @@ const SimpleNavbar: React.FC<SimpleNavbarProps> = ({ onMenuClick }) => {
                 end
               >
                 <Home className="h-4 w-4 mr-2" />
-                <span>主页</span>
+                <span>Home</span>
               </NavLink>
               
               <NavLink
@@ -135,7 +135,7 @@ const SimpleNavbar: React.FC<SimpleNavbarProps> = ({ onMenuClick }) => {
                 onClick={() => setMobileMenuOpen(false)}
               >
                 <Clock className="h-4 w-4 mr-2" />
-                <span>时间线视图</span>
+                <span>Timeline</span>
               </NavLink>
               
               <NavLink
@@ -148,7 +148,7 @@ const SimpleNavbar: React.FC<SimpleNavbarProps> = ({ onMenuClick }) => {
                 onClick={() => setMobileMenuOpen(false)}
               >
                 <Palette className="h-4 w-4 mr-2" />
-                <span>艺术主义画廊</span>
+                <span>Art Gallery</span>
               </NavLink>
             </div>
           </motion.div>

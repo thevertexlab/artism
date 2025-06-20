@@ -12,7 +12,7 @@ const GalleryPage = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  // 获取艺术作品数据
+  // Fetch artwork data
   useEffect(() => {
     const loadArtworks = async () => {
       try {
@@ -22,7 +22,7 @@ const GalleryPage = () => {
         setError(null);
       } catch (err) {
         console.error('Failed to fetch artworks:', err);
-        setError('加载艺术作品失败，请稍后再试');
+        setError('Failed to load artworks, please try again later');
       } finally {
         setLoading(false);
       }
@@ -31,14 +31,14 @@ const GalleryPage = () => {
     loadArtworks();
   }, []);
 
-  // 关闭详情模态框
+  // Close details modal
   const closeArtworkDetails = () => {
     setSelectedArtwork(null);
   };
 
   return (
     <div className="page-container relative">
-      {/* 标题栏 */}
+      {/* Title bar */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -51,13 +51,13 @@ const GalleryPage = () => {
           <CardContent className="p-4 flex justify-between items-center">
             <div className="flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-primary animate-glow-pulse" />
-              <h1 className="text-xl font-bold">艺术主义画廊</h1>
+              <h1 className="text-xl font-bold">Art Gallery</h1>
             </div>
             
             <div className="flex space-x-2">
               <Button variant="outline" size="sm" className="gap-1 hidden sm:flex bg-muted/50 border-primary/20 backdrop-blur-sm hover:bg-primary/10">
                 <ArrowUpDown className="h-4 w-4" />
-                <span>按时间排序</span>
+                <span>Sort by Date</span>
               </Button>
               
               <div className="border border-primary/20 rounded-md overflow-hidden flex">
@@ -73,7 +73,7 @@ const GalleryPage = () => {
         </Card>
       </motion.div>
       
-      {/* 内容区域 */}
+      {/* Content area */}
       <motion.div 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -92,7 +92,7 @@ const GalleryPage = () => {
               className="mt-4"
               onClick={() => fetchAllArtworks().then(setArtworks).catch(() => {})}
             >
-              重试
+              Retry
             </Button>
           </div>
         ) : (
@@ -100,7 +100,7 @@ const GalleryPage = () => {
         )}
       </motion.div>
       
-      {/* 作品详情模态框 */}
+      {/* Artwork details modal */}
       <AnimatePresence>
         {selectedArtwork && (
           <motion.div 
@@ -172,9 +172,9 @@ const GalleryPage = () => {
                   }}
                 >
                   <Sparkles className="h-4 w-4" />
-                  在时间线查看
+                  View in Timeline
                 </Button>
-                <Button variant="outline" className="border-primary/30 hover:bg-primary/10">查看相关作品</Button>
+                <Button variant="outline" className="border-primary/30 hover:bg-primary/10">View Related Works</Button>
               </CardFooter>
             </motion.div>
           </motion.div>

@@ -20,12 +20,12 @@ const TimelinePage = () => {
   const { nodes, loading, error, fetchNodes } = useTimelineStore();
   const [viewMode, setViewMode] = useState<'classic' | 'interactive'>('interactive');
   
-  // 从后端获取数据
+  // Fetch data from backend
   useEffect(() => {
     fetchNodes();
   }, [fetchNodes]);
   
-  // 将nodes数据转换为TimelineItem格式
+  // Convert nodes data to TimelineItem format
   const timelineItems: TimelineItem[] = nodes.map(node => ({
     id: node.id,
     title: node.title,
@@ -38,10 +38,10 @@ const TimelinePage = () => {
     influencedBy: node.influencedBy || []
   }));
   
-  // 将nodes数据转换为TimelineEvent格式
+  // Convert nodes data to TimelineEvent format
   const timelineEvents: TimelineEvent[] = nodes.map(node => ({
     id: node.id,
-    date: new Date(node.year, 0, 1), // 将年份转换为日期对象
+    date: new Date(node.year, 0, 1), // Convert year to date object
     title: node.title,
     description: node.description,
     category: node.styleMovement
@@ -49,9 +49,9 @@ const TimelinePage = () => {
 
   return (
     <div className="page-container">
-      {/* 标题栏 */}
+      {/* Title bar */}
       <div className="bg-white shadow-sm p-4 flex justify-between items-center">
-        <h1 className="text-xl font-bold text-gray-900">时间线视图</h1>
+        <h1 className="text-xl font-bold text-gray-900">Timeline View</h1>
         
         <div className="flex space-x-2">
           <div className="mr-4">
@@ -61,7 +61,7 @@ const TimelinePage = () => {
                 ? 'bg-blue-600 text-white' 
                 : 'bg-gray-200 text-gray-700'}`}
             >
-              交互式
+              Interactive
             </button>
             <button 
               onClick={() => setViewMode('classic')}
@@ -69,28 +69,28 @@ const TimelinePage = () => {
                 ? 'bg-blue-600 text-white' 
                 : 'bg-gray-200 text-gray-700'}`}
             >
-              经典
+              Classic
             </button>
           </div>
           
           <select className="px-3 py-1.5 border-2 border-gray-400 rounded text-sm hidden sm:block">
-            <option>全部时期</option>
-            <option>文艺复兴</option>
-            <option>现代艺术</option>
-            <option>当代艺术</option>
+            <option>All Periods</option>
+            <option>Renaissance</option>
+            <option>Modern Art</option>
+            <option>Contemporary Art</option>
           </select>
         </div>
       </div>
       
-      {/* 内容区域 */}
+      {/* Content area */}
       <div className="p-4">
         {loading ? (
           <div className="flex justify-center items-center h-64">
-            <p className="text-gray-600">加载数据中...</p>
+            <p className="text-gray-600">Loading data...</p>
           </div>
         ) : error ? (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-            <p>加载数据时出错: {error}</p>
+            <p>Error loading data: {error}</p>
           </div>
         ) : viewMode === 'classic' ? (
           <TimelineView items={timelineItems} />
@@ -103,11 +103,11 @@ const TimelinePage = () => {
                 className="mt-2"
               />
             ) : (
-              <p className="text-center text-gray-600">没有找到时间线数据</p>
+              <p className="text-center text-gray-600">No timeline data found</p>
             )}
             <div className="mt-8 text-center text-gray-600">
-              <p>使用鼠标左右拖动时间线查看不同时间点的项目进展</p>
-              <p className="text-sm mt-2">悬停在事件上可以查看详细信息</p>
+              <p>Use your mouse to drag the timeline left and right to view project progress at different times</p>
+              <p className="text-sm mt-2">Hover over events to see detailed information</p>
             </div>
           </div>
         )}

@@ -1,253 +1,254 @@
 [
   {
     "id": "artwork-1",
-    "title": "艺术作品 1",
-    "artist": "文森特·梵高",
+    "title": "Artwork 1",
+    "artist": "Vincent van Gogh",
     "year": 1978,
     "imageUrl": "/TestData/04f0cb46fa30e4e6fb42f07ede77fd42.png",
-    "style": "印象派",
-    "description": "这是一幅由文森特·梵高于1978年创作的印象派作品。这幅作品展示了艺术家独特的视角和创作风格，值得细细品味。"
+    "style": "Impressionism",
+    "description": "This is an impressionist work created by Vincent van Gogh in 1978. This artwork showcases the artist's unique perspective and creative style, worthy of careful appreciation."
   },
   {
     "id": "artwork-2",
-    "title": "艺术作品 2",
-    "artist": "萨尔瓦多·达利",
+    "title": "Artwork 2",
+    "artist": "Salvador Dalí",
     "year": 1922,
     "imageUrl": "/TestData/10001.jpg",
-    "style": "未来主义",
-    "description": "这是一幅由萨尔瓦多·达利于1922年创作的未来主义作品。这幅作品展示了艺术家独特的视角和创作风格，值得细细品味。"
+    "style": "Futurism",
+    "description": "This is a futurist work created by Salvador Dalí in 1922. This artwork showcases the artist's unique perspective and creative style, worthy of careful appreciation."
   },
   {
     "id": "artwork-3",
-    "title": "艺术作品 3",
-    "artist": "乔治亚·欧姬芙",
+    "title": "Artwork 3",
+    "artist": "Georgia O'Keeffe",
     "year": 1911,
     "imageUrl": "/TestData/10002.jpg",
-    "style": "后印象派",
-    "description": "这是一幅由乔治亚·欧姬芙于1911年创作的后印象派作品。这幅作品展示了艺术家独特的视角和创作风格，值得细细品味。"
+    "style": "Post-Impressionism",
+    "description": "This is a post-impressionist work created by Georgia O'Keeffe in 1911. This artwork showcases the artist's unique perspective and creative style, worthy of careful appreciation."
   },
   {
     "id": "artwork-4",
-    "title": "艺术作品 4",
-    "artist": "巴勃罗·毕加索",
+    "title": "Artwork 4",
+    "artist": "Pablo Picasso",
     "year": 1909,
     "imageUrl": "/TestData/10003.jpg",
-    "style": "未来主义",
-    "description": "这是一幅由巴勃罗·毕加索于1909年创作的未来主义作品。这幅作品展示了艺术家独特的视角和创作风格，值得细细品味。"
+    "style": "Futurism",
+    "description": "This is a futurist work created by Pablo Picasso in 1909. This artwork showcases the artist's unique perspective and creative style, worthy of careful appreciation."
   },
   {
     "id": "artwork-5",
-    "title": "艺术作品 5",
-    "artist": "巴勃罗·毕加索",
+    "title": "Artwork 5",
+    "artist": "Pablo Picasso",
     "year": 1894,
     "imageUrl": "/TestData/10004.jpg",
-    "style": "印象派",
-    "description": "这是一幅由巴勃罗·毕加索于1894年创作的印象派作品。这幅作品展示了艺术家独特的视角和创作风格，值得细细品味。"
+    "style": "Impressionism",
+    "description": "This is an impressionist work created by Pablo Picasso in 1894. This artwork showcases the artist's unique perspective and creative style, worthy of careful appreciation."
   },
   {
     "id": "artwork-6",
-    "title": "艺术作品 6",
-    "artist": "巴勃罗·毕加索",
+    "title": "Artwork 6",
+    "artist": "Pablo Picasso",
     "year": 1983,
     "imageUrl": "/TestData/10005.jpg",
-    "style": "超现实主义",
-    "description": "这是一幅由巴勃罗·毕加索于1983年创作的超现实主义作品。这幅作品展示了艺术家独特的视角和创作风格，值得细细品味。"
+    "style": "Surrealism",
+    "description": "This is a surrealist work created by Pablo Picasso in 1983. This artwork showcases the artist's unique perspective and creative style, worthy of careful appreciation."
   },
   {
     "id": "artwork-7",
-    "title": "艺术作品 7",
-    "artist": "萨尔瓦多·达利",
+    "title": "Artwork 7",
+    "artist": "Salvador Dalí",
     "year": 1952,
     "imageUrl": "/TestData/10006.jpg",
-    "style": "现代主义",
-    "description": "这是一幅由萨尔瓦多·达利于1952年创作的现代主义作品。这幅作品展示了艺术家独特的视角和创作风格，值得细细品味。"
+    "style": "Modernism",
+    "description": "This is a modernist work created by Salvador Dalí in 1952. This artwork showcases the artist's unique perspective and creative style, worthy of careful appreciation."
   },
   {
     "id": "artwork-8",
-    "title": "艺术作品 8",
-    "artist": "克劳德·莫奈",
+    "title": "Artwork 8",
+    "artist": "Claude Monet",
     "year": 1951,
     "imageUrl": "/TestData/10007.jpg",
-    "style": "现代主义",
-    "description": "这是一幅由克劳德·莫奈于1951年创作的现代主义作品。这幅作品展示了艺术家独特的视角和创作风格，值得细细品味。"
+    "style": "Modernism",
+    "description": "This is a modernist work created by Claude Monet in 1951. This artwork showcases the artist's unique perspective and creative style, worthy of careful appreciation."
   },
   {
     "id": "artwork-9",
-    "title": "艺术作品 9",
-    "artist": "爱德华·蒙克",
+    "title": "Artwork 9",
+    "artist": "Edvard Munch",
     "year": 1894,
     "imageUrl": "/TestData/10008.jpg",
-    "style": "后印象派",
-    "description": "这是一幅由爱德华·蒙克于1894年创作的后印象派作品。这幅作品展示了艺术家独特的视角和创作风格，值得细细品味。"
+    "style": "Post-Impressionism",
+    "description": "This is a post-impressionist work created by Edvard Munch in 1894. This artwork showcases the artist's unique perspective and creative style, worthy of careful appreciation."
   },
   {
     "id": "artwork-10",
-    "title": "艺术作品 10",
-    "artist": "萨尔瓦多·达利",
+    "title": "Artwork 10",
+    "artist": "Salvador Dalí",
     "year": 1955,
     "imageUrl": "/TestData/10009.jpg",
-    "style": "超现实主义",
-    "description": "这是一幅由萨尔瓦多·达利于1955年创作的超现实主义作品。这幅作品展示了艺术家独特的视角和创作风格，值得细细品味。"
+    "style": "Surrealism",
+    "description": "This is a surrealist work created by Salvador Dalí in 1955. This artwork showcases the artist's unique perspective and creative style, worthy of careful appreciation."
   },
   {
     "id": "artwork-11",
-    "title": "艺术作品 11",
-    "artist": "萨尔瓦多·达利",
+    "title": "Artwork 11",
+    "artist": "Salvador Dalí",
     "year": 1905,
     "imageUrl": "/TestData/10010.jpg",
-    "style": "超现实主义",
-    "description": "这是一幅由萨尔瓦多·达利于1905年创作的超现实主义作品。这幅作品展示了艺术家独特的视角和创作风格，值得细细品味。"
+    "style": "Surrealism",
+    "description": "This is a surrealist work created by Salvador Dalí in 1905. This artwork showcases the artist's unique perspective and creative style, worthy of careful appreciation."
   },
   {
     "id": "artwork-12",
-    "title": "艺术作品 12",
-    "artist": "萨尔瓦多·达利",
+    "title": "Artwork 12",
+    "artist": "Salvador Dalí",
     "year": 1938,
     "imageUrl": "/TestData/10011.jpg",
-    "style": "极简主义",
-    "description": "这是一幅由萨尔瓦多·达利于1938年创作的极简主义作品。这幅作品展示了艺术家独特的视角和创作风格，值得细细品味。"
+    "style": "Minimalism",
+    "description": "This is a minimalist work created by Salvador Dalí in 1938. This artwork showcases the artist's unique perspective and creative style, worthy of careful appreciation."
   },
   {
     "id": "artwork-13",
-    "title": "艺术作品 13",
-    "artist": "乔治亚·欧姬芙",
+    "title": "Artwork 13",
+    "artist": "Georgia O'Keeffe",
     "year": 1876,
     "imageUrl": "/TestData/10012.jpg",
-    "style": "现代主义",
-    "description": "这是一幅由乔治亚·欧姬芙于1876年创作的现代主义作品。这幅作品展示了艺术家独特的视角和创作风格，值得细细品味。"
+    "style": "Modernism",
+    "description": "This is a modernist work created by Georgia O'Keeffe in 1876. This artwork showcases the artist's unique perspective and creative style, worthy of careful appreciation."
   },
   {
     "id": "artwork-14",
-    "title": "艺术作品 14",
-    "artist": "爱德华·蒙克",
+    "title": "Artwork 14",
+    "artist": "Edvard Munch",
     "year": 1886,
     "imageUrl": "/TestData/10013.jpg",
-    "style": "未来主义",
-    "description": "这是一幅由爱德华·蒙克于1886年创作的未来主义作品。这幅作品展示了艺术家独特的视角和创作风格，值得细细品味。"
+    "style": "Futurism",
+    "description": "This is a futurist work created by Edvard Munch in 1886. This artwork showcases the artist's unique perspective and creative style, worthy of careful appreciation."
   },
   {
     "id": "artwork-15",
-    "title": "艺术作品 15",
-    "artist": "巴勃罗·毕加索",
+    "title": "Artwork 15",
+    "artist": "Pablo Picasso",
     "year": 1896,
     "imageUrl": "/TestData/10014.jpg",
-    "style": "未来主义",
-    "description": "这是一幅由巴勃罗·毕加索于1896年创作的未来主义作品。这幅作品展示了艺术家独特的视角和创作风格，值得细细品味。"
+    "style": "Futurism",
+    "description": "This is a futurist work created by Pablo Picasso in 1896. This artwork showcases the artist's unique perspective and creative style, worthy of careful appreciation."
   },
   {
     "id": "artwork-16",
-    "title": "艺术作品 16",
-    "artist": "瓦西里·康定斯基",
+    "title": "Artwork 16",
+    "artist": "Wassily Kandinsky",
     "year": 1902,
     "imageUrl": "/TestData/10015.jpg",
-    "style": "表现主义",
-    "description": "这是一幅由瓦西里·康定斯基于1902年创作的表现主义作品。这幅作品展示了艺术家独特的视角和创作风格，值得细细品味。"
+    "style": "Expressionism",
+    "description": "This is an expressionist work created by Wassily Kandinsky in 1902. This artwork showcases the artist's unique perspective and creative style, worthy of careful appreciation."
   },
   {
     "id": "artwork-17",
-    "title": "艺术作品 17",
-    "artist": "瓦西里·康定斯基",
+    "title": "Artwork 17",
+    "artist": "Wassily Kandinsky",
     "year": 1984,
     "imageUrl": "/TestData/10016.jpg",
-    "style": "极简主义",
-    "description": "这是一幅由瓦西里·康定斯基于1984年创作的极简主义作品。这幅作品展示了艺术家独特的视角和创作风格，值得细细品味。"
+    "style": "Minimalism",
+    "description": "This is a minimalist work created by Wassily Kandinsky in 1984. This artwork showcases the artist's unique perspective and creative style, worthy of careful appreciation."
   },
   {
     "id": "artwork-18",
-    "title": "艺术作品 18",
-    "artist": "爱德华·蒙克",
+    "title": "Artwork 18",
+    "artist": "Edvard Munch",
     "year": 1991,
     "imageUrl": "/TestData/10017.jpg",
-    "style": "极简主义",
-    "description": "这是一幅由爱德华·蒙克于1991年创作的极简主义作品。这幅作品展示了艺术家独特的视角和创作风格，值得细细品味。"
+    "style": "Minimalism",
+    "description": "This is a minimalist work created by Edvard Munch in 1991. This artwork showcases the artist's unique perspective and creative style, worthy of careful appreciation."
   },
   {
     "id": "artwork-19",
-    "title": "艺术作品 19",
-    "artist": "弗里达·卡罗",
+    "title": "Artwork 19",
+    "artist": "Frida Kahlo",
     "year": 1880,
     "imageUrl": "/TestData/10018.jpg",
-    "style": "现代主义",
-    "description": "这是一幅由弗里达·卡罗于1880年创作的现代主义作品。这幅作品展示了艺术家独特的视角和创作风格，值得细细品味。"
+    "style": "Modernism",
+    "description": "This is a modernist work created by Frida Kahlo in 1880. This artwork showcases the artist's unique perspective and creative style, worthy of careful appreciation."
   },
   {
     "id": "artwork-20",
-    "title": "艺术作品 20",
-    "artist": "杰克逊·波洛克",
+    "title": "Artwork 20",
+    "artist": "Jackson Pollock",
     "year": 1973,
     "imageUrl": "/TestData/10019.jpg",
-    "style": "印象派",
-    "description": "这是一幅由杰克逊·波洛克于1973年创作的印象派作品。这幅作品展示了艺术家独特的视角和创作风格，值得细细品味。"
+    "style": "Impressionism",
+    "description": "This is an impressionist work created by Jackson Pollock in 1973. This artwork showcases the artist's unique perspective and creative style, worthy of careful appreciation."
   },
   {
     "id": "artwork-21",
-    "title": "艺术作品 21",
-    "artist": "瓦西里·康定斯基",
+    "title": "Artwork 21",
+    "artist": "Wassily Kandinsky",
     "year": 1900,
     "imageUrl": "/TestData/10020.jpg",
-    "style": "超现实主义",
-    "description": "这是一幅由瓦西里·康定斯基于1900年创作的超现实主义作品。这幅作品展示了艺术家独特的视角和创作风格，值得细细品味。"
+    "style": "Surrealism",
+    "description": "This is a surrealist work created by Wassily Kandinsky in 1900. This artwork showcases the artist's unique perspective and creative style, worthy of careful appreciation."
   },
   {
     "id": "artwork-22",
-    "title": "艺术作品 22",
-    "artist": "弗里达·卡罗",
+    "title": "Artwork 22",
+    "artist": "Frida Kahlo",
     "year": 1892,
     "imageUrl": "/TestData/10021.jpg",
-    "style": "极简主义",
-    "description": "这是一幅由弗里达·卡罗于1892年创作的极简主义作品。这幅作品展示了艺术家独特的视角和创作风格，值得细细品味。"
+    "style": "Minimalism",
+    "description": "This is a minimalist work created by Frida Kahlo in 1892. This artwork showcases the artist's unique perspective and creative style, worthy of careful appreciation."
   },
   {
     "id": "artwork-23",
-    "title": "艺术作品 23",
-    "artist": "弗里达·卡罗",
+    "title": "Artwork 23",
+    "artist": "Frida Kahlo",
     "year": 1898,
     "imageUrl": "/TestData/10022.jpg",
-    "style": "未来主义",
-    "description": "这是一幅由弗里达·卡罗于1898年创作的未来主义作品。这幅作品展示了艺术家独特的视角和创作风格，值得细细品味。"
+    "style": "Futurism",
+    "description": "This is a futurist work created by Frida Kahlo in 1898. This artwork showcases the artist's unique perspective and creative style, worthy of careful appreciation."
   },
   {
     "id": "artwork-24",
-    "title": "艺术作品 24",
-    "artist": "弗里达·卡罗",
+    "title": "Artwork 24",
+    "artist": "Frida Kahlo",
     "year": 1930,
     "imageUrl": "/TestData/10023.jpg",
-    "style": "未来主义",
-    "description": "这是一幅由弗里达·卡罗于1930年创作的未来主义作品。这幅作品展示了艺术家独特的视角和创作风格，值得细细品味。"
+    "style": "Futurism",
+    "description": "This is a futurist work created by Frida Kahlo in 1930. This artwork showcases the artist's unique perspective and creative style, worthy of careful appreciation."
   },
   {
     "id": "artwork-25",
-    "title": "艺术作品 25",
-    "artist": "弗里达·卡罗",
+    "title": "Artwork 25",
+    "artist": "Frida Kahlo",
     "year": 2002,
     "imageUrl": "/TestData/10024.jpg",
-    "style": "极简主义",
-    "description": "这是一幅由弗里达·卡罗于2002年创作的极简主义作品。这幅作品展示了艺术家独特的视角和创作风格，值得细细品味。"
+    "style": "Minimalism",
+    "description": "This is a minimalist work created by Frida Kahlo in 2002. This artwork showcases the artist's unique perspective and creative style, worthy of careful appreciation."
   },
   {
     "id": "artwork-26",
-    "title": "艺术作品 26",
-    "artist": "瓦西里·康定斯基",
+    "title": "Artwork 26",
+    "artist": "Wassily Kandinsky",
     "year": 1930,
     "imageUrl": "/TestData/10025.jpg",
-    "style": "抽象主义",
-    "description": "这是一幅由瓦西里·康定斯基于1930年创作的抽象主义作品。这幅作品展示了艺术家独特的视角和创作风格，值得细细品味。"
+    "style": "Abstract Art",
+    "description": "This is an abstract art work created by Wassily Kandinsky in 1930. This artwork showcases the artist's unique perspective and creative style, worthy of careful appreciation."
   },
   {
     "id": "artwork-27",
-    "title": "艺术作品 27",
-    "artist": "杰克逊·波洛克",
+    "title": "Artwork 27",
+    "artist": "Jackson Pollock",
     "year": 1948,
     "imageUrl": "/TestData/10026.jpg",
-    "style": "未来主义",
-    "description": "这是一幅由杰克逊·波洛克于1948年创作的未来主义作品。这幅作品展示了艺术家独特的视角和创作风格，值得细细品味。"
+    "style": "Futurism",
+    "description": "This is a futurist work created by Jackson Pollock in 1948. This artwork showcases the artist's unique perspective and creative style, worthy of careful appreciation."
   },
   {
     "id": "artwork-28",
-    "title": "艺术作品 28",
-    "artist": "萨尔瓦多·达利",
+    "title": "Artwork 28",
+    "artist": "Salvador Dalí",
     "year": 1889,
     "imageUrl": "/TestData/10027.jpg",
+    "style": "Post-Impressionism",
     "style": "后印象派",
     "description": "这是一幅由萨尔瓦多·达利于1889年创作的后印象派作品。这幅作品展示了艺术家独特的视角和创作风格，值得细细品味。"
   },

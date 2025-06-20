@@ -5,7 +5,7 @@ import IsmismIntro from './IsmismIntro';
 import SimpleNavbar from './SimpleNavbar';
 import { useNavigate } from 'react-router-dom';
 
-// 格式化文本，在逗号处添加换行
+// Format text with line breaks at commas
 const formatTextWithLineBreaks = (text: string) => {
   return text.split(',').map((part, index, array) => (
     <React.Fragment key={index}>
@@ -28,7 +28,7 @@ const HomePage: React.FC = () => {
   const intervalRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const navigate = useNavigate();
 
-  // 监听滚动事件
+  // Listen to scroll events
   useEffect(() => {
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
@@ -44,7 +44,7 @@ const HomePage: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [scrolled]);
 
-  // 文字动态切换效果
+  // Text switching effect
   useEffect(() => {
     if (isAutoSwitch) {
       intervalRef.current = setInterval(() => {
@@ -60,20 +60,20 @@ const HomePage: React.FC = () => {
     };
   }, [isAutoSwitch]);
 
-  // 点击切换文字
+  // Handle text click
   const handlePhraseClick = () => {
-    // 暂停自动切换
+    // Pause auto switching
     setIsAutoSwitch(false);
-    // 手动切换
+    // Manual switch
     setIsFirstPhrase(prev => !prev);
     
-    // 5秒后恢复自动切换
+    // Resume auto switching after 5 seconds
     setTimeout(() => {
       setIsAutoSwitch(true);
     }, 5000);
   };
 
-  // 下滑到介绍部分
+  // Scroll to intro section
   const scrollToIntro = () => {
     setShowIntro(true);
     if (introRef.current) {
@@ -81,7 +81,7 @@ const HomePage: React.FC = () => {
     }
   };
 
-  // 文本内容 - 添加了逗号以便在逗号处换行
+  // Text content - with commas for line breaks
   const firstPhrase = "IF YOU THIS, WHY I NOT THAT";
   const secondPhrase = "IF YOU THAT, WHY NOT I THIS";
 
@@ -89,23 +89,23 @@ const HomePage: React.FC = () => {
     <div className="flex flex-col min-h-screen bg-[#0a0a0b]">
       <SimpleNavbar onMenuClick={() => {}} />
       
-      {/* 动态背景 */}
+      {/* Dynamic background */}
       <div className="fixed inset-0 z-0 overflow-hidden">
-        {/* 暗色背景渐变 */}
+        {/* Dark gradient background */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-[#0a0a0b] to-[#0a0a0b] opacity-80"></div>
         
-        {/* 光晕效果 */}
+        {/* Glow effects */}
         <div className="absolute -inset-[10px] opacity-60">
-          {/* 左上角的光晕 */}
+          {/* Top left glow */}
           <div className="absolute top-0 left-0 w-[600px] h-[600px] bg-blue-500 rounded-full mix-blend-screen filter blur-[120px] opacity-30 animate-pulse"></div>
-          {/* 右下角的光晕 */}
+          {/* Bottom right glow */}
           <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-purple-500 rounded-full mix-blend-screen filter blur-[120px] opacity-30 animate-pulse" style={{ animationDelay: "1s" }}></div>
-          {/* 中间的光晕 */}
+          {/* Center glow */}
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[300px] bg-indigo-500 rounded-full mix-blend-screen filter blur-[120px] opacity-10 animate-pulse" style={{ animationDelay: "1.5s" }}></div>
         </div>
       </div>
       
-      {/* 主页头部 */}
+      {/* Homepage header */}
       <motion.div
         className="h-screen flex flex-col items-center justify-center relative z-10"
         initial={{ opacity: 0 }}
@@ -113,10 +113,10 @@ const HomePage: React.FC = () => {
         transition={{ duration: 1 }}
       >
         <div className="text-center px-4 w-full max-w-[95%] lg:max-w-[85%] mx-auto flex flex-col h-full">
-          {/* 上部空白区域 - 较小 */}
+          {/* Top empty space */}
           <div className="flex-grow-0 h-[25vh]"></div>
           
-          {/* 文字部分 */}
+          {/* Text section */}
           <div 
             className="relative overflow-visible cursor-pointer"
             onClick={handlePhraseClick}
@@ -158,7 +158,7 @@ const HomePage: React.FC = () => {
             </AnimatePresence>
           </div>
           
-          {/* 剩余空间，用于将按钮放置在下方 */}
+          {/* Remaining space for button placement */}
           <div className="flex-grow flex items-center justify-center">
             <motion.div
               className="mb-20"
@@ -170,7 +170,7 @@ const HomePage: React.FC = () => {
                 onClick={scrollToIntro}
                 className="flex flex-col items-center text-gray-300 hover:text-white transition-colors group mt-20"
               >
-                <span className="mb-3 text-lg group-hover:text-blue-300 transition-colors">简介</span>
+                <span className="mb-3 text-lg group-hover:text-blue-300 transition-colors">About</span>
                 <motion.div
                   animate={{ y: [0, 10, 0] }}
                   transition={{ repeat: Infinity, duration: 1.5 }}
@@ -184,7 +184,7 @@ const HomePage: React.FC = () => {
         </div>
       </motion.div>
 
-      {/* 主义主义介绍部分 */}
+      {/* Ismism introduction section */}
       <div ref={introRef} className="min-h-screen z-10 relative">
         <AnimatePresence>
           {showIntro && (
