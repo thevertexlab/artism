@@ -4,6 +4,7 @@ import Sidebar from '../components/layout/Sidebar';
 import TopBar from '../components/layout/TopBar';
 import Providers from '../components/layout/Providers';
 import { SidebarProvider } from '../components/layout/SidebarContext';
+import StagewiseToolbarProvider from '../components/layout/StagewiseToolbarProvider';
 
 export const metadata = {
   title: 'AIDA - Artificial Intelligence Artist Database',
@@ -32,6 +33,7 @@ export default function RootLayout({
                 </div>
               </div>
             </SidebarProvider>
+            <StagewiseToolbarProvider />
           </Providers>
         </div>
       </body>
