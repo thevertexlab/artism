@@ -5,7 +5,7 @@ import { Button } from './ui/button';
 import { useTimelineStore } from '../store/timelineStore';
 import { useSearchParams, useLocation, useNavigate } from 'react-router-dom';
 import ArtMovementDetail from './ArtMovementDetail';
-import { useToast } from "../components/ui/use-toast";
+import { useToast } from "./ui/use-toast";
 import { IArtStyle } from '../types/art';
 import { artMovementService } from '../services/artMovementService';
 
@@ -49,7 +49,7 @@ const TIMELINE_POSITION_KEY = 'timeline_position';
 const TIMELINE_SCROLL_POSITION_KEY = 'timeline_scroll_position';
 
 const Timeline: React.FC = () => {
-  const { nodes: timelineNodes, fetchNodes, fetchContemporaryNodes, loading, error } = useTimelineStore();
+  const { nodes: timelineNodes, fetchNodes, loading, error } = useTimelineStore();
   const [searchTerm, setSearchTerm] = useState('');
   const timelineRef = useRef<HTMLDivElement>(null);
   const [searchParams] = useSearchParams();
@@ -57,7 +57,6 @@ const Timeline: React.FC = () => {
   const navigate = useNavigate();
   const [highlightedNodeId, setHighlightedNodeId] = useState<string | null>(null);
   const timelineListRef = useRef<HTMLDivElement>(null);
-  const [dataSource, setDataSource] = useState<'regular' | 'contemporary'>('regular');
   const { toast } = useToast();
   
   // 当前选中的艺术主义节点
@@ -129,20 +128,6 @@ const Timeline: React.FC = () => {
     };
   }, [sortedNodes]);
   
-  // 切换数据源
-  const toggleDataSource = () => {
-    const newSource = dataSource === 'regular' ? 'contemporary' : 'regular';
-    setDataSource(newSource);
-    
-    if (newSource === 'regular') {
-      fetchNodes();
-      toast("数据源已切换为普通艺术运动", "info", 3000);
-    } else {
-      fetchContemporaryNodes();
-      toast("数据源已切换为当代艺术运动", "info", 3000);
-    }
-  };
-  
   // 处理"现在"按钮点击
   const handleNowClick = () => {
     // 找到当前年份最接近的节点
@@ -177,11 +162,7 @@ const Timeline: React.FC = () => {
   
   // 加载时间线节点
   useEffect(() => {
-    if (dataSource === 'regular') {
-      fetchNodes();
-    } else {
-      fetchContemporaryNodes();
-    }
+    fetchNodes();
     
     // 添加悬停样式
     addHoverStyles();
@@ -203,7 +184,7 @@ const Timeline: React.FC = () => {
         styleElement.remove();
       }
     };
-  }, [fetchNodes, fetchContemporaryNodes, dataSource]);
+  }, [fetchNodes]);
 
   // 加载时恢复时间轴位置和滚动位置
   useEffect(() => {
@@ -701,27 +682,8 @@ const Timeline: React.FC = () => {
 
   const [previewImage, setPreviewImage] = useState<{src: string, title: string, artist: string, year: number} | null>(null);
 
-  // 添加在顶部的数据源切换按钮
-  const renderDataSourceToggle = () => {
-    return (
-      <div className="absolute top-4 right-4 z-10">
-        <Button
-          onClick={toggleDataSource}
-          variant="outline"
-          className="bg-white/90 hover:bg-white/100 text-sm"
-          disabled={loading}
-        >
-          {loading ? '加载中...' : dataSource === 'regular' ? '切换到当代艺术运动' : '切换到普通艺术运动'}
-        </Button>
-      </div>
-    );
-  };
-
   return (
     <div className="relative w-full h-full overflow-hidden">
-      {/* 添加数据源切换按钮 */}
-      {renderDataSourceToggle()}
-      
       {/* 显示错误信息 */}
       {error && (
         <div className="bg-red-500/20 text-red-700 p-4 rounded-md mb-4 mx-auto max-w-md mt-4">
