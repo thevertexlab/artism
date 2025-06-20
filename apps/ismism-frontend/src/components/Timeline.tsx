@@ -49,7 +49,7 @@ const TIMELINE_POSITION_KEY = 'timeline_position';
 const TIMELINE_SCROLL_POSITION_KEY = 'timeline_scroll_position';
 
 const Timeline: React.FC = () => {
-  const { nodes: timelineNodes, fetchNodes, fetchContemporaryNodes } = useTimelineStore();
+  const { nodes: timelineNodes, fetchNodes, fetchContemporaryNodes, loading, error } = useTimelineStore();
   const [searchTerm, setSearchTerm] = useState('');
   const timelineRef = useRef<HTMLDivElement>(null);
   const [searchParams] = useSearchParams();
@@ -92,27 +92,40 @@ const Timeline: React.FC = () => {
 
   // 使用记忆化优化筛选和排序后的节点列表
   const sortedNodes = React.useMemo(() => {
+    // 确保timelineNodes存在且是数组
+    if (!Array.isArray(timelineNodes) || timelineNodes.length === 0) {
+      return [];
+    }
+
     // 筛选节点
-    const filteredNodes = timelineNodes.filter(node => 
-      searchTerm === '' || 
-      node.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      node.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      node.artists?.some(artist => artist.toLowerCase().includes(searchTerm.toLowerCase())) ||
-      node.styleMovement?.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const filteredNodes = timelineNodes.filter(node => {
+      if (!node) return false;
+      
+      return searchTerm === '' || 
+        (node.title && node.title.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (node.description && node.description.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (Array.isArray(node.artists) && node.artists.some(artist => 
+          artist && typeof artist === 'string' && artist.toLowerCase().includes(searchTerm.toLowerCase())
+        )) ||
+        (node.styleMovement && node.styleMovement.toLowerCase().includes(searchTerm.toLowerCase()));
+    });
 
     // 排序节点
-    return [...filteredNodes].sort((a, b) => a.year - b.year);
+    return [...filteredNodes].sort((a, b) => (a.year || 0) - (b.year || 0));
   }, [timelineNodes, searchTerm]);
 
   // 计算时间轴的最小和最大年份
   const { minYear, maxYear, timeRange } = React.useMemo(() => {
-    const min = sortedNodes.length > 0 ? sortedNodes[0].year : 1800;
-    const max = sortedNodes.length > 0 ? sortedNodes[sortedNodes.length - 1].year : 2023;
+    if (!sortedNodes.length) {
+      return { minYear: 1800, maxYear: 2023, timeRange: 223 };
+    }
+    
+    const min = sortedNodes.length > 0 ? (sortedNodes[0].year || 1800) : 1800;
+    const max = sortedNodes.length > 0 ? (sortedNodes[sortedNodes.length - 1].year || 2023) : 2023;
     return { 
       minYear: min, 
       maxYear: max, 
-      timeRange: max - min 
+      timeRange: max - min || 1 // 避免除以零
     };
   }, [sortedNodes]);
   
@@ -123,16 +136,10 @@ const Timeline: React.FC = () => {
     
     if (newSource === 'regular') {
       fetchNodes();
-      toast({
-        title: "数据源已切换",
-        description: "显示普通艺术运动数据",
-      });
+      toast("数据源已切换为普通艺术运动", "info", 3000);
     } else {
       fetchContemporaryNodes();
-      toast({
-        title: "数据源已切换",
-        description: "显示当代艺术运动数据",
-      });
+      toast("数据源已切换为当代艺术运动", "info", 3000);
     }
   };
   
@@ -702,8 +709,9 @@ const Timeline: React.FC = () => {
           onClick={toggleDataSource}
           variant="outline"
           className="bg-white/90 hover:bg-white/100 text-sm"
+          disabled={loading}
         >
-          {dataSource === 'regular' ? '切换到当代艺术运动' : '切换到普通艺术运动'}
+          {loading ? '加载中...' : dataSource === 'regular' ? '切换到当代艺术运动' : '切换到普通艺术运动'}
         </Button>
       </div>
     );
@@ -713,6 +721,22 @@ const Timeline: React.FC = () => {
     <div className="relative w-full h-full overflow-hidden">
       {/* 添加数据源切换按钮 */}
       {renderDataSourceToggle()}
+      
+      {/* 显示错误信息 */}
+      {error && (
+        <div className="bg-red-500/20 text-red-700 p-4 rounded-md mb-4 mx-auto max-w-md mt-4">
+          <p className="font-semibold">加载数据时出错：</p>
+          <p>{error}</p>
+        </div>
+      )}
+      
+      {/* 显示加载状态 */}
+      {loading && (
+        <div className="flex items-center justify-center h-40 mt-8">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+          <p className="ml-3 text-blue-500">正在加载艺术运动数据...</p>
+        </div>
+      )}
       
       {/* 标题和搜索栏 */}
       <motion.div

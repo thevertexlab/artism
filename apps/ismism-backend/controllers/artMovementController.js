@@ -270,25 +270,33 @@ exports.getContemporaryMovements = async (req, res) => {
       year: movement.start_year,
       description: movement.description || '',
       characteristics: movement.characteristics || [],
-      artists: movement.representative_artists || [],
-      images: movement.images || [],
+      // 确保artists是字符串数组
+      artists: Array.isArray(movement.representative_artists) ? movement.representative_artists : [],
+      // 确保images是数组
+      images: Array.isArray(movement.images) ? movement.images : [],
       period: {
         start: movement.start_year,
         end: movement.end_year || new Date().getFullYear()
       },
+      // 添加空的artworks数组，避免前端报错
+      artworks: [],
+      // 添加空的keyArtists数组，避免前端报错
+      keyArtists: [],
       styleMovement: movement.name,
-      influences: movement.influences || [],
-      influencedBy: movement.influencedBy || [],
-      tags: movement.tags || [],
+      influences: Array.isArray(movement.influences) ? movement.influences : [],
+      influencedBy: Array.isArray(movement.influencedBy) ? movement.influencedBy : [],
+      tags: Array.isArray(movement.tags) ? movement.tags : [],
       position: movement.position || { x: Math.random() * 800, y: Math.random() * 400 }
     }));
     
     // 关闭连接
     await client.close();
     
+    console.log(`Fetched ${formattedMovements.length} contemporary movements`);
+    
     res.json(formattedMovements);
   } catch (error) {
     console.error('Error fetching contemporary movements:', error);
-    res.status(500).json({ message: 'Error fetching contemporary movements' });
+    res.status(500).json({ message: 'Error fetching contemporary movements', error: error.message });
   }
 }; 
