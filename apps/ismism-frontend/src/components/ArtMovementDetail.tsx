@@ -173,7 +173,7 @@ const ArtMovementDetail: React.FC<ArtMovementDetailProps> = ({ artStyle, onClose
           </h2>
           <p className="text-gray-400 mt-1">
             {artStyle.period ? 
-              `${artStyle.period.start} - ${artStyle.period.end}` : 
+              `${artStyle.period.start}` : 
               `约 ${artStyle.year} 年`}
           </p>
         </div>
