@@ -5,11 +5,15 @@ const {
   getArtMovementById,
   createArtMovement,
   updateArtMovement,
-  deleteArtMovement
+  deleteArtMovement,
+  getContemporaryMovements
 } = require('../controllers/artMovementController');
 
 // 获取所有艺术运动
 router.get('/', getAllArtMovements);
+
+// 获取contemporary_movements数据库中的艺术运动
+router.get('/contemporary', getContemporaryMovements);
 
 // 获取单个艺术运动
 router.get('/:id', getArtMovementById);

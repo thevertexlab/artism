@@ -49,7 +49,7 @@ const TIMELINE_POSITION_KEY = 'timeline_position';
 const TIMELINE_SCROLL_POSITION_KEY = 'timeline_scroll_position';
 
 const Timeline: React.FC = () => {
-  const { nodes: timelineNodes, fetchNodes } = useTimelineStore();
+  const { nodes: timelineNodes, fetchNodes, fetchContemporaryNodes } = useTimelineStore();
   const [searchTerm, setSearchTerm] = useState('');
   const timelineRef = useRef<HTMLDivElement>(null);
   const [searchParams] = useSearchParams();
@@ -57,6 +57,8 @@ const Timeline: React.FC = () => {
   const navigate = useNavigate();
   const [highlightedNodeId, setHighlightedNodeId] = useState<string | null>(null);
   const timelineListRef = useRef<HTMLDivElement>(null);
+  const [dataSource, setDataSource] = useState<'regular' | 'contemporary'>('regular');
+  const { toast } = useToast();
   
   // 当前选中的艺术主义节点
   const [selectedNode, setSelectedNode] = useState<IArtStyle | null>(null);
@@ -94,8 +96,8 @@ const Timeline: React.FC = () => {
     const filteredNodes = timelineNodes.filter(node => 
       searchTerm === '' || 
       node.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      node.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      node.artists.some(artist => artist.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      node.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      node.artists?.some(artist => artist.toLowerCase().includes(searchTerm.toLowerCase())) ||
       node.styleMovement?.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
@@ -114,9 +116,65 @@ const Timeline: React.FC = () => {
     };
   }, [sortedNodes]);
   
+  // 切换数据源
+  const toggleDataSource = () => {
+    const newSource = dataSource === 'regular' ? 'contemporary' : 'regular';
+    setDataSource(newSource);
+    
+    if (newSource === 'regular') {
+      fetchNodes();
+      toast({
+        title: "数据源已切换",
+        description: "显示普通艺术运动数据",
+      });
+    } else {
+      fetchContemporaryNodes();
+      toast({
+        title: "数据源已切换",
+        description: "显示当代艺术运动数据",
+      });
+    }
+  };
+  
+  // 处理"现在"按钮点击
+  const handleNowClick = () => {
+    // 找到当前年份最接近的节点
+    const currentYear = new Date().getFullYear();
+    let closestNode = sortedNodes[0];
+    let minDiff = Math.abs(currentYear - closestNode.year);
+    
+    sortedNodes.forEach(node => {
+      const diff = Math.abs(currentYear - node.year);
+      if (diff < minDiff) {
+        minDiff = diff;
+        closestNode = node;
+      }
+    });
+    
+    // 如果找到了节点，滚动到该节点
+    if (closestNode && nodeRefs.current[closestNode.id]) {
+      nodeRefs.current[closestNode.id]?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center'
+      });
+      
+      // 高亮显示
+      setHighlightedNodeId(closestNode.id);
+      
+      // 略微延时后取消高亮
+      setTimeout(() => {
+        setHighlightedNodeId(null);
+      }, 2000);
+    }
+  };
+  
   // 加载时间线节点
   useEffect(() => {
-    fetchNodes();
+    if (dataSource === 'regular') {
+      fetchNodes();
+    } else {
+      fetchContemporaryNodes();
+    }
     
     // 添加悬停样式
     addHoverStyles();
@@ -138,7 +196,7 @@ const Timeline: React.FC = () => {
         styleElement.remove();
       }
     };
-  }, [fetchNodes]);
+  }, [fetchNodes, fetchContemporaryNodes, dataSource]);
 
   // 加载时恢复时间轴位置和滚动位置
   useEffect(() => {
@@ -634,17 +692,28 @@ const Timeline: React.FC = () => {
     return fallbackSrc;
   };
 
-  const { toast } = useToast();
-
-  // 处理"现在"按钮点击
-  const handleNowClick = () => {
-    // ... existing code ...
-  };
-
   const [previewImage, setPreviewImage] = useState<{src: string, title: string, artist: string, year: number} | null>(null);
 
+  // 添加在顶部的数据源切换按钮
+  const renderDataSourceToggle = () => {
+    return (
+      <div className="absolute top-4 right-4 z-10">
+        <Button
+          onClick={toggleDataSource}
+          variant="outline"
+          className="bg-white/90 hover:bg-white/100 text-sm"
+        >
+          {dataSource === 'regular' ? '切换到当代艺术运动' : '切换到普通艺术运动'}
+        </Button>
+      </div>
+    );
+  };
+
   return (
-    <div className="flex flex-col h-full">
+    <div className="relative w-full h-full overflow-hidden">
+      {/* 添加数据源切换按钮 */}
+      {renderDataSourceToggle()}
+      
       {/* 标题和搜索栏 */}
       <motion.div
         initial={{ opacity: 0, y: -10 }}

@@ -1,6 +1,7 @@
 const Movement = require('../models/Movement');
 const Artist = require('../models/Artist');
 const Artwork = require('../models/Artwork');
+const mongoose = require('mongoose');
 
 // 获取所有艺术运动数据，包括相关的艺术家和作品信息
 exports.getAllArtMovements = async (req, res) => {
@@ -243,5 +244,51 @@ exports.deleteArtMovement = async (req, res) => {
   } catch (error) {
     console.error(`Error deleting art movement ${req.params.id}:`, error);
     res.status(500).json({ message: 'Error deleting art movement' });
+  }
+};
+
+// 获取contemporary_movements数据库中的艺术运动数据
+exports.getContemporaryMovements = async (req, res) => {
+  try {
+    // 创建一个新的连接到contemporary_movements数据库
+    const uri = 'mongodb://localhost:27017/contemporary_movements';
+    const client = await mongoose.createConnection(uri, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    });
+    
+    // 获取movements集合
+    const collection = client.collection('movements');
+    
+    // 查询所有艺术运动数据
+    const movements = await collection.find({}).toArray();
+    
+    // 转换为前端所需的格式
+    const formattedMovements = movements.map(movement => ({
+      id: movement._id.toString(),
+      title: movement.name,
+      year: movement.start_year,
+      description: movement.description || '',
+      characteristics: movement.characteristics || [],
+      artists: movement.representative_artists || [],
+      images: movement.images || [],
+      period: {
+        start: movement.start_year,
+        end: movement.end_year || new Date().getFullYear()
+      },
+      styleMovement: movement.name,
+      influences: movement.influences || [],
+      influencedBy: movement.influencedBy || [],
+      tags: movement.tags || [],
+      position: movement.position || { x: Math.random() * 800, y: Math.random() * 400 }
+    }));
+    
+    // 关闭连接
+    await client.close();
+    
+    res.json(formattedMovements);
+  } catch (error) {
+    console.error('Error fetching contemporary movements:', error);
+    res.status(500).json({ message: 'Error fetching contemporary movements' });
   }
 }; 
