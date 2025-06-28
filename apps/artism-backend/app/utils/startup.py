@@ -68,12 +68,20 @@ def run_startup():
     运行启动序列（同步版本）
     """
     try:
-        # 尝试使用asyncio.run
-        return asyncio.run(startup_sequence())
-    except RuntimeError:
-        # 如果已经在事件循环中，则直接创建任务
         loop = asyncio.get_event_loop()
-        return loop.run_until_complete(startup_sequence())
+        if loop.is_running():
+            # 如果事件循环已在运行，使用 ensure_future 并等待结果
+            future = asyncio.ensure_future(startup_sequence())
+            # 兼容 Jupyter/嵌入环境
+            import time
+            while not future.done():
+                time.sleep(0.1)
+            return future.result()
+        else:
+            return loop.run_until_complete(startup_sequence())
+    except RuntimeError:
+        # 没有事件循环时
+        return asyncio.run(startup_sequence())
 
 
 if __name__ == "__main__":
