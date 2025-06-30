@@ -6,6 +6,7 @@ import Timeline from './components/Timeline';
 import HomePage from './components/HomePage';
 import ArtMovementPage from './pages/ArtMovementPage';
 import ArtworkDetailPage from './pages/ArtworkDetailPage';
+import ConnectionTestPage from './pages/ConnectionTestPage';
 import { CursorGlow } from './components/ui/cursor-glow';
 import { TechBackground } from './components/ui/tech-background';
 import { useTimelineStore } from './store/timelineStore';
@@ -28,6 +29,7 @@ function App() {
         <Route path="/" element={<MainLayout />}>
           <Route path="gallery" element={<Gallery />} />
           <Route path="timeline" element={<Timeline />} />
+          <Route path="connection-test" element={<ConnectionTestPage />} />
           <Route path="art-movement/:id" element={<ArtMovementPage />} />
           <Route path="artwork/:id" element={<ArtworkDetailPage />} />
         </Route>

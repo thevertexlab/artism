@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { IArtStyle } from '../types/art';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001/api';
 
 export const artMovementService = {
   // 获取艺术主义详情

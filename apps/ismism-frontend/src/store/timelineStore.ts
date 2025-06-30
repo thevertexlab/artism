@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { buildApiUrl, getApiHeaders } from '../config/api';
 import { IArtStyle } from '../types/art';
 
 interface TimelineState {
@@ -17,7 +18,9 @@ export const useTimelineStore = create<TimelineState>((set) => ({
   fetchNodes: async () => {
     try {
       set({ loading: true, error: null });
-      const response = await fetch('http://localhost:5000/api/movements');
+      const response = await fetch(buildApiUrl('ismism', '/api/movements'), {
+        headers: getApiHeaders(),
+      });
       
       if (!response.ok) {
         throw new Error(`API返回错误: ${response.status}`);
@@ -44,7 +47,9 @@ export const useTimelineStore = create<TimelineState>((set) => ({
   fetchContemporaryNodes: async () => {
     try {
       set({ loading: true, error: null });
-      const response = await fetch('http://localhost:5000/api/movements/contemporary');
+      const response = await fetch(buildApiUrl('ismism', '/api/movements/contemporary'), {
+        headers: getApiHeaders(),
+      });
       
       if (!response.ok) {
         throw new Error(`API返回错误: ${response.status}`);

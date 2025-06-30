@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Zap, Palette, Clock, Menu, X, Home } from 'lucide-react';
+import { Search, Zap, Palette, Clock, Menu, X, Home, Wifi } from 'lucide-react';
 import { Button } from './ui/button';
 import { NavLink } from 'react-router-dom';
 
@@ -67,14 +67,26 @@ const SimpleNavbar: React.FC<SimpleNavbarProps> = ({ onMenuClick }) => {
               
               <NavLink
                 to="/gallery"
-                className={({ isActive }: NavLinkStateProps) => 
-                  `flex items-center px-3 py-1.5 rounded-lg ${isActive 
-                    ? 'bg-gradient-to-r from-blue-500/15 to-blue-500/5 text-blue-400 font-medium' 
+                className={({ isActive }: NavLinkStateProps) =>
+                  `flex items-center px-3 py-1.5 rounded-lg ${isActive
+                    ? 'bg-gradient-to-r from-blue-500/15 to-blue-500/5 text-blue-400 font-medium'
                     : 'hover:bg-white/5 text-gray-200'} transition-all duration-200`
                 }
               >
                 <Palette className="h-4 w-4 mr-1.5" />
                 <span>Art Gallery</span>
+              </NavLink>
+
+              <NavLink
+                to="/connection-test"
+                className={({ isActive }: NavLinkStateProps) =>
+                  `flex items-center px-3 py-1.5 rounded-lg ${isActive
+                    ? 'bg-gradient-to-r from-green-500/15 to-green-500/5 text-green-400 font-medium'
+                    : 'hover:bg-white/5 text-gray-200'} transition-all duration-200`
+                }
+              >
+                <Wifi className="h-4 w-4 mr-1.5" />
+                <span>连接测试</span>
               </NavLink>
             </div>
         </div>
