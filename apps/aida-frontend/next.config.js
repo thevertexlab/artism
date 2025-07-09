@@ -4,7 +4,16 @@ const nextConfig = {
   swcMinify: true,
   // 添加图片域名配置
   images: {
-    domains: ['picsum.photos', 'images.unsplash.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'picsum.photos',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
+    ],
   },
   // 确保生产环境中的路由处理
   trailingSlash: false,

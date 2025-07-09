@@ -1,6 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.docs import get_swagger_ui_html, get_redoc_html
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+import os
 
 from app.core.config import PROJECT_NAME, PROJECT_DESCRIPTION, PROJECT_VERSION, API_V1_STR
 from app.api.v1 import api_router
@@ -49,12 +52,57 @@ def create_app() -> FastAPI:
             redoc_js_url="https://cdn.jsdelivr.net/npm/redoc@next/bundles/redoc.standalone.js",
         )
     
-    # 根路由
-    @app.get("/")
+    # 静态文件服务
+    static_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "static")
+    if os.path.exists(static_dir):
+        app.mount("/static", StaticFiles(directory=static_dir), name="static")
+
+    # AI Comments 页面路由
+    @app.get("/ai-comments", response_class=FileResponse)
+    async def ai_comments_page():
+        static_file = os.path.join(static_dir, "ai-comments.html")
+        if os.path.exists(static_file):
+            return FileResponse(static_file)
+        return {"error": "AI Comments page not found"}
+
+    # AI Social Demo 页面路由
+    @app.get("/ai-social-demo", response_class=FileResponse)
+    async def ai_social_demo_page():
+        static_file = os.path.join(static_dir, "ai-social-demo.html")
+        if os.path.exists(static_file):
+            return FileResponse(static_file)
+        return {"error": "AI Social Demo page not found"}
+
+    # 根路由 - 返回主页面
+    @app.get("/", response_class=FileResponse)
     async def root():
-        return {"message": "Welcome to AIDA API"}
-    
+        static_file = os.path.join(static_dir, "index.html")
+        if os.path.exists(static_file):
+            return FileResponse(static_file)
+        return {
+            "message": "Welcome to AIDA API",
+            "pages": {
+                "ai_comments": "/ai-comments",
+                "ai_social_demo": "/ai-social-demo",
+                "api_docs": "/api/docs",
+                "redoc": "/api/redoc"
+            }
+        }
+
+    # API信息路由
+    @app.get("/api")
+    async def api_info():
+        return {
+            "message": "Welcome to AIDA API",
+            "pages": {
+                "ai_comments": "/ai-comments",
+                "ai_social_demo": "/ai-social-demo",
+                "api_docs": "/api/docs",
+                "redoc": "/api/redoc"
+            }
+        }
+
     # 包含 API 路由
     app.include_router(api_router, prefix=API_V1_STR)
-    
+
     return app

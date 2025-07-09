@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 
 // 动态导入地图组件以避免SSR问题
@@ -83,6 +84,30 @@ const createAvatarIcon = (avatarUrl: string, isOnline: boolean) => {
 export default function WorldMapPage() {
   const [users, setUsers] = useState<User[]>([]);
   const [isClient, setIsClient] = useState(false);
+  const [startingChatWith, setStartingChatWith] = useState<string | null>(null);
+  const router = useRouter();
+
+  // 处理开始聊天
+  const handleStartChat = async (user: User) => {
+    setStartingChatWith(user.id);
+
+    // 将用户信息编码为URL参数
+    const userParams = new URLSearchParams({
+      newChat: 'true',
+      userId: user.id,
+      userName: user.name,
+      userAvatar: user.avatar,
+      userLocation: `${user.location.city}, ${user.location.country}`,
+      artStyle: user.artStyle,
+      isOnline: user.isOnline.toString()
+    });
+
+    // 添加一个小延迟以显示加载状态
+    await new Promise(resolve => setTimeout(resolve, 500));
+
+    // 跳转到聊天页面
+    router.push(`/chats?${userParams.toString()}`);
+  };
 
   useEffect(() => {
     setIsClient(true);
@@ -235,8 +260,23 @@ export default function WorldMapPage() {
                       </div>
                     </div>
                     
-                    <button className="w-full mt-3 bg-[#0066FF] text-white py-2 px-4 rounded-lg hover:bg-[#0052CC] transition-colors">
-                      Start Chat
+                    <button
+                      onClick={() => handleStartChat(user)}
+                      disabled={startingChatWith === user.id}
+                      className={`w-full mt-3 py-2 px-4 rounded-lg transition-colors ${
+                        startingChatWith === user.id
+                          ? 'bg-gray-400 cursor-not-allowed'
+                          : 'bg-[#0066FF] hover:bg-[#0052CC]'
+                      } text-white`}
+                    >
+                      {startingChatWith === user.id ? (
+                        <div className="flex items-center justify-center">
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                          Starting Chat...
+                        </div>
+                      ) : (
+                        'Start Chat'
+                      )}
                     </button>
                   </div>
                 </Popup>

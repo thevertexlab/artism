@@ -13,19 +13,15 @@ import {
   Sun,
   Moon,
   Menu,
-  ChevronLeft,
-  User,
-  LogIn,
-  UserPlus,
-  LogOut
+  ChevronLeft
 } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useSidebar } from './SidebarContext';
 import { useTheme } from './Providers';
 import Logo from './Logo';
 
-const Sidebar = () => {
+const SimpleSidebar = () => {
   const pathname = usePathname();
   const router = useRouter();
   const { isExpanded, toggleSidebar } = useSidebar();
@@ -33,25 +29,8 @@ const Sidebar = () => {
   const { theme, setTheme } = useTheme();
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
 
-  // 用户认证状态
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState<{name: string; email: string; avatar?: string} | null>(null);
-
   useEffect(() => {
     setIsMounted(true);
-
-    // 检查本地存储的登录状态
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      try {
-        const userData = JSON.parse(storedUser);
-        setUser(userData);
-        setIsLoggedIn(true);
-      } catch (error) {
-        console.error('Failed to parse stored user data:', error);
-        localStorage.removeItem('user');
-      }
-    }
   }, []);
 
   // 简单的导航函数
@@ -63,39 +42,6 @@ const Sidebar = () => {
       // 备用导航方法
       window.location.href = path;
     }
-  };
-
-  // 登录函数
-  const handleLogin = () => {
-    // 模拟登录 - 实际项目中应该调用真实的认证API
-    const userData = {
-      name: 'Demo User',
-      email: 'demo@artism.ai',
-      avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face'
-    };
-    setUser(userData);
-    setIsLoggedIn(true);
-    localStorage.setItem('user', JSON.stringify(userData));
-  };
-
-  // 登出函数
-  const handleLogout = () => {
-    setUser(null);
-    setIsLoggedIn(false);
-    localStorage.removeItem('user');
-  };
-
-  // 注册函数
-  const handleSignup = () => {
-    // 模拟注册 - 实际项目中应该调用真实的注册API
-    const userData = {
-      name: 'New User',
-      email: 'newuser@artism.ai',
-      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face'
-    };
-    setUser(userData);
-    setIsLoggedIn(true);
-    localStorage.setItem('user', JSON.stringify(userData));
   };
 
   const mainMenuItems = [
@@ -124,10 +70,10 @@ const Sidebar = () => {
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-[#333]">
         <div className={`flex items-center space-x-3 ${!isExpanded && 'justify-center'}`}>
-          <Logo className="w-8 h-8" />
+          <Logo />
           {isExpanded && (
-            <span className="text-2xl font-bold text-blue-500">
-              AIDA
+            <span className="text-xl font-bold text-gray-900 dark:text-white">
+              Artism
             </span>
           )}
         </div>
@@ -230,84 +176,9 @@ const Sidebar = () => {
             </button>
           );
         })}
-
-        {/* User Authentication Section */}
-        <div className="mt-4 pt-4 border-t border-gray-200 dark:border-[#333]">
-          {isLoggedIn ? (
-            // 已登录状态
-            <>
-              {/* 用户信息 */}
-              <div className={`flex items-center space-x-3 px-3 py-2 mb-2 ${!isExpanded && 'justify-center'}`}>
-                <img
-                  src={user?.avatar || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face'}
-                  alt={user?.name || 'User'}
-                  className="w-8 h-8 rounded-full"
-                />
-                {isExpanded && (
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
-                      {user?.name || 'User'}
-                    </p>
-                    <p className="text-xs text-gray-500 dark:text-[#8899A6] truncate">
-                      {user?.email || 'user@example.com'}
-                    </p>
-                  </div>
-                )}
-              </div>
-
-              {/* 登出按钮 */}
-              <button
-                onClick={handleLogout}
-                className={`
-                  w-full flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors
-                  text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10
-                  ${!isExpanded && 'justify-center'}
-                `}
-              >
-                <LogOut className="w-5 h-5 flex-shrink-0" />
-                {isExpanded && (
-                  <span className="font-medium">Logout</span>
-                )}
-              </button>
-            </>
-          ) : (
-            // 未登录状态
-            <>
-              {/* 登录按钮 */}
-              <button
-                onClick={handleLogin}
-                className={`
-                  w-full flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors mb-2
-                  text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-500/10
-                  ${!isExpanded && 'justify-center'}
-                `}
-              >
-                <LogIn className="w-5 h-5 flex-shrink-0" />
-                {isExpanded && (
-                  <span className="font-medium">Login</span>
-                )}
-              </button>
-
-              {/* 注册按钮 */}
-              <button
-                onClick={handleSignup}
-                className={`
-                  w-full flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors
-                  text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-500/10
-                  ${!isExpanded && 'justify-center'}
-                `}
-              >
-                <UserPlus className="w-5 h-5 flex-shrink-0" />
-                {isExpanded && (
-                  <span className="font-medium">Sign Up</span>
-                )}
-              </button>
-            </>
-          )}
-        </div>
       </div>
     </div>
   );
 };
 
-export default Sidebar;
+export default SimpleSidebar;

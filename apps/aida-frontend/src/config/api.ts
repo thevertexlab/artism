@@ -26,6 +26,7 @@ export const API_ENDPOINTS = {
   ART_MOVEMENTS: '/api/v1/art-movements',
   AI_INTERACTION: '/api/v1/ai-interaction',
   AI_GENERATE: '/api/v1/ai-generate',
+  AI_COMMENTS: '/api/v1/ai-comments',
   IMPORT_TEST_DATA: '/api/v1/artworks/import-test-data',
 
   // Ismism Backend (Express.js)

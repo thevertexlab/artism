@@ -1,14 +1,15 @@
 'use client';
 
 import { useState } from 'react';
-import { 
-  Layout, 
-  Bell, 
-  Shield, 
-  Languages, 
-  Sun, 
-  Moon, 
-  ChevronRight 
+import {
+  Layout,
+  Bell,
+  Shield,
+  Languages,
+  Sun,
+  Moon,
+  ChevronRight,
+  User
 } from 'lucide-react';
 import Link from 'next/link';
 import { useTheme } from '@/components/layout/Providers';
@@ -31,29 +32,35 @@ const SettingsPage = () => {
   };
 
   const settingsItems = [
-    { 
-      icon: Layout, 
-      label: '显示设置', 
+    {
+      icon: User,
+      label: '账户设置',
+      description: '管理个人资料、注册和登录',
+      href: '/settings/account'
+    },
+    {
+      icon: Layout,
+      label: '显示设置',
       description: '自定义界面显示效果',
       href: '/settings/display'
     },
-    { 
-      icon: Bell, 
-      label: '通知设置', 
+    {
+      icon: Bell,
+      label: '通知设置',
       description: `当前状态: ${notificationsEnabled ? '开启' : '关闭'}`,
       action: toggleNotifications,
       isToggle: true,
       toggleState: notificationsEnabled
     },
-    { 
-      icon: Shield, 
-      label: '隐私设置', 
+    {
+      icon: Shield,
+      label: '隐私设置',
       description: '管理您的隐私选项',
       href: '/settings/privacy'
     },
-    { 
-      icon: Languages, 
-      label: '语言设置', 
+    {
+      icon: Languages,
+      label: '语言设置',
       description: '更改显示语言',
       href: '/settings/language'
     },

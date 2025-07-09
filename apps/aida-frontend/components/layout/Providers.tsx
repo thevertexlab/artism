@@ -67,20 +67,9 @@ export function CustomThemeProvider({ children }: { children: ReactNode }) {
     } else {
       document.documentElement.classList.remove('dark');
     }
-    
-    // 过渡动画结束后重置状态
-    setTimeout(() => {
-      setIsTransitioning(false);
-    }, 300); // 与 CSS 过渡时间相匹配
   };
-  
-  return (
-    <ThemeContext.Provider value={{ theme, setTheme }}>
-      <div className={isTransitioning ? 'theme-transitioning' : ''}>
-        {children}
-      </div>
-    </ThemeContext.Provider>
-  );
+
+  return <ThemeContext.Provider value={{ theme, setTheme }}>{children}</ThemeContext.Provider>;
 }
 
 // 导出主题钩子
@@ -101,11 +90,14 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   const showToast = (message: string, type: ToastType = 'info') => {
     const id = Math.random().toString(36).substring(2, 9);
     setToasts((prev) => [...prev, { id, message, type }]);
-    
-    // 3秒后自动移除通知
-    setTimeout(() => {
+
+    // 3秒后自动移除通知 - 添加清理机制
+    const timeoutId = setTimeout(() => {
       hideToast(id);
     }, 3000);
+
+    // 存储timeout ID以便清理
+    return () => clearTimeout(timeoutId);
   };
   
   // 隐藏通知

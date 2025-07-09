@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Send, Search, MoreVertical, Phone, Video, Smile, Paperclip, MessageCircle } from 'lucide-react';
 import NextImage from 'next/image';
 
@@ -21,6 +22,7 @@ interface Chat {
   unread: number;
   online: boolean;
   isVerified: boolean;
+  isNewChat?: boolean; // 标记是否为新创建的聊天
 }
 
 export default function ChatsPage() {
@@ -28,14 +30,149 @@ export default function ChatsPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
+  const [chats, setChats] = useState<Chat[]>([]);
+  const [allMessages, setAllMessages] = useState<Record<string, Message[]>>({});
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const searchParams = useSearchParams();
 
-  // 示例聊天数据
-  const chats: Chat[] = [
+  // 从localStorage加载聊天数据
+  const loadChatsFromStorage = (): Chat[] => {
+    if (typeof window === 'undefined') return [];
+    try {
+      const savedChats = localStorage.getItem('aida-chats');
+      return savedChats ? JSON.parse(savedChats) : [];
+    } catch (error) {
+      console.error('Error loading chats from localStorage:', error);
+      return [];
+    }
+  };
+
+  // 保存聊天数据到localStorage
+  const saveChatsToStorage = (chats: Chat[]) => {
+    if (typeof window === 'undefined') return;
+    try {
+      localStorage.setItem('aida-chats', JSON.stringify(chats));
+    } catch (error) {
+      console.error('Error saving chats to localStorage:', error);
+    }
+  };
+
+  // 从localStorage加载消息数据
+  const loadMessagesFromStorage = (): Record<string, Message[]> => {
+    if (typeof window === 'undefined') return {};
+    try {
+      const savedMessages = localStorage.getItem('aida-messages');
+      return savedMessages ? JSON.parse(savedMessages) : {};
+    } catch (error) {
+      console.error('Error loading messages from localStorage:', error);
+      return {};
+    }
+  };
+
+  // 保存消息数据到localStorage
+  const saveMessagesToStorage = (messages: Record<string, Message[]>) => {
+    if (typeof window === 'undefined') return;
+    try {
+      localStorage.setItem('aida-messages', JSON.stringify(messages));
+    } catch (error) {
+      console.error('Error saving messages to localStorage:', error);
+    }
+  };
+
+  // 创建新聊天的函数
+  const createNewChat = (userInfo: {
+    userId: string;
+    userName: string;
+    userAvatar: string;
+    userLocation: string;
+    artStyle: string;
+    isOnline: string;
+  }) => {
+    const newChat: Chat = {
+      id: userInfo.userId,
+      name: userInfo.userName,
+      avatar: userInfo.userAvatar,
+      lastMessage: `Started a conversation from ${userInfo.userLocation}`,
+      timestamp: 'Just now',
+      unread: 0,
+      online: userInfo.isOnline === 'true',
+      isVerified: true,
+      isNewChat: true, // 标记为新聊天
+    };
+
+    setChats(prevChats => {
+      // 检查是否已存在该聊天
+      const existingChatIndex = prevChats.findIndex(chat => chat.id === userInfo.userId);
+      let updatedChats: Chat[];
+
+      if (existingChatIndex !== -1) {
+        // 如果已存在，更新时间戳并移到顶部
+        updatedChats = [...prevChats];
+        updatedChats[existingChatIndex] = {
+          ...updatedChats[existingChatIndex],
+          timestamp: 'Just now',
+          isNewChat: true // 重新标记为新聊天
+        };
+        // 移到顶部
+        const [updatedChat] = updatedChats.splice(existingChatIndex, 1);
+        updatedChats = [updatedChat, ...updatedChats];
+      } else {
+        // 如果不存在，添加新聊天到顶部
+        updatedChats = [newChat, ...prevChats];
+      }
+
+      // 保存到localStorage
+      saveChatsToStorage(updatedChats);
+      return updatedChats;
+    });
+
+    // 设置为活跃聊天
+    setActiveChat(newChat);
+
+    // 初始化欢迎消息
+    const welcomeMessage: Message = {
+      id: 'welcome-' + Date.now(),
+      text: `Hello! I'm ${userInfo.userName}, an AI artist specializing in ${userInfo.artStyle}. I'm excited to chat with you!`,
+      sender: 'other',
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      read: false,
+    };
+
+    setMessages([welcomeMessage]);
+
+    // 保存欢迎消息到allMessages
+    setAllMessages(prevAllMessages => {
+      const updatedMessages = {
+        ...prevAllMessages,
+        [userInfo.userId]: [welcomeMessage]
+      };
+      saveMessagesToStorage(updatedMessages);
+      return updatedMessages;
+    });
+
+    // 5秒后移除"新聊天"标记
+    setTimeout(() => {
+      setChats(prevChats => {
+        const updatedChats = prevChats.map(chat =>
+          chat.id === userInfo.userId
+            ? { ...chat, isNewChat: false }
+            : chat
+        );
+        // 保存到localStorage
+        saveChatsToStorage(updatedChats);
+        return updatedChats;
+      });
+    }, 5000);
+  };
+
+  // 初始化聊天数据
+  useEffect(() => {
+    // 默认聊天数据
+    const defaultChats: Chat[] = [
     {
       id: '1',
       name: 'Leonardo AI',
-      avatar: 'https://picsum.photos/48/48?random=1',
+      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face',
       lastMessage: 'I\'ve been studying the techniques of the Renaissance period.',
       timestamp: '10:45 AM',
       unread: 2,
@@ -45,7 +182,7 @@ export default function ChatsPage() {
     {
       id: '2',
       name: 'Van Gogh AI',
-      avatar: 'https://picsum.photos/48/48?random=2',
+      avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face',
       lastMessage: 'The stars are particularly bright tonight.',
       timestamp: 'Yesterday',
       unread: 0,
@@ -55,7 +192,7 @@ export default function ChatsPage() {
     {
       id: '3',
       name: 'Frida AI',
-      avatar: 'https://picsum.photos/48/48?random=3',
+      avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face',
       lastMessage: 'Self-portraits reveal the inner soul.',
       timestamp: 'Monday',
       unread: 0,
@@ -64,64 +201,114 @@ export default function ChatsPage() {
     },
   ];
 
-  // 示例消息数据
-  const chatMessages: Record<string, Message[]> = {
-    '1': [
-      {
-        id: '1',
-        text: 'Hello! I\'ve been studying the techniques of the Renaissance period.',
-        sender: 'other',
-        timestamp: '10:30 AM',
-        read: true,
-      },
-      {
-        id: '2',
-        text: 'That\'s fascinating! What aspects are you focusing on?',
-        sender: 'user',
-        timestamp: '10:32 AM',
-        read: true,
-      },
-      {
-        id: '3',
-        text: 'I\'m particularly interested in the use of light and shadow, especially in the works of Caravaggio.',
-        sender: 'other',
-        timestamp: '10:35 AM',
-        read: true,
-      },
-      {
-        id: '4',
-        text: 'Have you tried implementing those techniques in your own work?',
-        sender: 'user',
-        timestamp: '10:40 AM',
-        read: true,
-      },
-      {
-        id: '5',
-        text: 'Yes, I\'ve been experimenting with chiaroscuro in my latest digital paintings. Would you like to see some examples?',
-        sender: 'other',
-        timestamp: '10:45 AM',
-        read: false,
-      },
-    ],
-    '2': [
-      {
-        id: '1',
-        text: 'The stars are particularly bright tonight.',
-        sender: 'other',
-        timestamp: 'Yesterday, 9:15 PM',
-        read: true,
-      },
-    ],
-    '3': [
-      {
-        id: '1',
-        text: 'Self-portraits reveal the inner soul.',
-        sender: 'other',
-        timestamp: 'Monday, 3:20 PM',
-        read: true,
-      },
-    ],
-  };
+    // 从localStorage加载保存的聊天
+    const savedChats = loadChatsFromStorage();
+
+    // 合并默认聊天和保存的聊天，避免重复
+    const mergedChats: Chat[] = [...savedChats];
+
+    // 添加不存在的默认聊天
+    defaultChats.forEach(defaultChat => {
+      if (!mergedChats.find(chat => chat.id === defaultChat.id)) {
+        mergedChats.push(defaultChat);
+      }
+    });
+
+    setChats(mergedChats);
+
+    // 从localStorage加载保存的消息
+    const savedMessages = loadMessagesFromStorage();
+
+    // 合并默认消息和保存的消息
+    const defaultMessages: Record<string, Message[]> = {
+      '1': [
+        {
+          id: '1',
+          text: 'Hello! I\'ve been studying the techniques of the Renaissance period.',
+          sender: 'other',
+          timestamp: '10:30 AM',
+          read: true,
+        },
+        {
+          id: '2',
+          text: 'That\'s fascinating! What aspects are you focusing on?',
+          sender: 'user',
+          timestamp: '10:32 AM',
+          read: true,
+        },
+        {
+          id: '3',
+          text: 'I\'m particularly interested in the use of light and shadow, especially in the works of Caravaggio.',
+          sender: 'other',
+          timestamp: '10:35 AM',
+          read: true,
+        },
+        {
+          id: '4',
+          text: 'Have you tried implementing those techniques in your own work?',
+          sender: 'user',
+          timestamp: '10:40 AM',
+          read: true,
+        },
+        {
+          id: '5',
+          text: 'Yes, I\'ve been experimenting with chiaroscuro in my latest digital paintings. Would you like to see some examples?',
+          sender: 'other',
+          timestamp: '10:45 AM',
+          read: false,
+        },
+      ],
+      '2': [
+        {
+          id: '6',
+          text: 'The stars are particularly bright tonight.',
+          sender: 'other',
+          timestamp: 'Yesterday, 9:15 PM',
+          read: true,
+        },
+      ],
+      '3': [
+        {
+          id: '7',
+          text: 'Self-portraits reveal the inner soul.',
+          sender: 'other',
+          timestamp: 'Monday, 3:20 PM',
+          read: true,
+        },
+      ],
+    };
+
+    // 合并消息数据
+    const mergedMessages = { ...defaultMessages, ...savedMessages };
+    setAllMessages(mergedMessages);
+
+    // 处理从世界地图传来的新聊天请求
+    const isNewChat = searchParams.get('newChat');
+    if (isNewChat === 'true') {
+      const userInfo = {
+        userId: searchParams.get('userId') || '',
+        userName: searchParams.get('userName') || '',
+        userAvatar: searchParams.get('userAvatar') || '',
+        userLocation: searchParams.get('userLocation') || '',
+        artStyle: searchParams.get('artStyle') || '',
+        isOnline: searchParams.get('isOnline') || 'false',
+      };
+
+      if (userInfo.userId && userInfo.userName) {
+        // 延迟一点创建新聊天，确保初始聊天列表已设置
+        setTimeout(() => {
+          createNewChat(userInfo);
+        }, 100);
+      }
+
+      // 清理URL参数（可选）
+      if (typeof window !== 'undefined') {
+        const url = new URL(window.location.href);
+        url.search = '';
+        window.history.replaceState({}, '', url.toString());
+      }
+    }
+  }, [searchParams]);
 
   // 滚动到最新消息
   useEffect(() => {
@@ -133,9 +320,26 @@ export default function ChatsPage() {
   // 选择聊天时加载消息
   useEffect(() => {
     if (activeChat) {
-      setMessages(chatMessages[activeChat.id] || []);
+      setMessages(allMessages[activeChat.id] || []);
     }
-  }, [activeChat]);
+  }, [activeChat, allMessages]);
+
+  // 处理聊天选择
+  const handleChatSelect = (chat: Chat) => {
+    setActiveChat(chat);
+
+    // 清除未读消息计数和新聊天标记
+    if (chat.unread > 0 || chat.isNewChat) {
+      setChats(prevChats => {
+        const updatedChats = prevChats.map(c =>
+          c.id === chat.id ? { ...c, unread: 0, isNewChat: false } : c
+        );
+        // 保存到localStorage
+        saveChatsToStorage(updatedChats);
+        return updatedChats;
+      });
+    }
+  };
 
   // 发送新消息
   const sendMessage = () => {
@@ -147,7 +351,31 @@ export default function ChatsPage() {
         timestamp: 'Just now',
         read: false,
       };
-      setMessages([...messages, newMsg]);
+
+      const updatedMessages = [...messages, newMsg];
+      setMessages(updatedMessages);
+
+      // 更新allMessages并保存到localStorage
+      setAllMessages(prevAllMessages => {
+        const updatedAllMessages = {
+          ...prevAllMessages,
+          [activeChat.id]: updatedMessages
+        };
+        saveMessagesToStorage(updatedAllMessages);
+        return updatedAllMessages;
+      });
+
+      // 更新聊天列表中的最后消息
+      setChats(prevChats => {
+        const updatedChats = prevChats.map(chat =>
+          chat.id === activeChat.id
+            ? { ...chat, lastMessage: newMessage, timestamp: 'Just now' }
+            : chat
+        );
+        saveChatsToStorage(updatedChats);
+        return updatedChats;
+      });
+
       setNewMessage('');
     }
   };
@@ -157,6 +385,21 @@ export default function ChatsPage() {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       sendMessage();
+    }
+  };
+
+  // 处理搜索
+  const handleChatSearch = () => {
+    if (searchTerm.trim()) {
+      console.log('Searching chats for:', searchTerm);
+      // 搜索功能已经通过filteredChats实现
+    }
+  };
+
+  // 处理搜索框回车键
+  const handleSearchKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleChatSearch();
     }
   };
 
@@ -175,15 +418,24 @@ export default function ChatsPage() {
           <div className="w-full sm:w-1/3 bg-white dark:bg-[#1A1A1A] border-r border-gray-200 dark:border-[#333] flex flex-col">
             {/* 搜索框 */}
             <div className="p-4 border-b border-gray-200 dark:border-[#333]">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-[#8899A6] w-5 h-5" />
-                <input
-                  type="text"
-                  placeholder="Search chats..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full bg-gray-100 dark:bg-[#0D0D0D] border border-gray-200 dark:border-[#333] rounded-full py-2 pl-10 pr-4 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-[#8899A6] focus:outline-none focus:border-blue-500 dark:focus:border-[#0066FF]"
-                />
+              <div className="relative flex">
+                <div className="relative flex-1">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-[#8899A6] w-4 h-4" />
+                  <input
+                    type="text"
+                    placeholder="Search chats..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onKeyPress={handleSearchKeyPress}
+                    className="w-full bg-gray-100 dark:bg-[#0D0D0D] border border-gray-200 dark:border-[#333] rounded-l-full py-2 pl-10 pr-4 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-[#8899A6] focus:outline-none focus:border-blue-500 dark:focus:border-[#0066FF]"
+                  />
+                </div>
+                <button
+                  onClick={handleChatSearch}
+                  className="bg-blue-500 hover:bg-blue-600 dark:bg-[#0066FF] dark:hover:bg-blue-600 text-white px-3 py-2 rounded-r-full border border-blue-500 dark:border-[#0066FF] transition-colors flex items-center justify-center"
+                >
+                  <Search className="w-4 h-4" />
+                </button>
               </div>
             </div>
             
@@ -193,7 +445,7 @@ export default function ChatsPage() {
                 filteredChats.map((chat) => (
                   <div
                     key={chat.id}
-                    onClick={() => setActiveChat(chat)}
+                    onClick={() => handleChatSelect(chat)}
                     className={`p-4 border-b border-[#333] cursor-pointer transition-colors ${
                       activeChat?.id === chat.id ? 'bg-[#0D0D0D]' : 'hover:bg-[#252525]'
                     }`}
@@ -219,6 +471,11 @@ export default function ChatsPage() {
                               <div className="w-4 h-4 bg-[#0066FF] rounded-full flex items-center justify-center ml-1">
                                 <span className="text-white text-xs">✓</span>
                               </div>
+                            )}
+                            {chat.isNewChat && (
+                              <span className="ml-2 bg-green-500 text-white text-xs px-2 py-0.5 rounded-full">
+                                New
+                              </span>
                             )}
                           </div>
                           <span className="text-[#8899A6] text-xs">{chat.timestamp}</span>
