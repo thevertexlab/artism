@@ -73,7 +73,7 @@ web_modules/
 .yarn-integrity
 
 # dotenv environment variable files
-.env
+# .env - now tracked in git for development convenience
 .env.development.local
 .env.test.local
 .env.production.local
@@ -141,7 +141,7 @@ api_test.log
 fix_artism_backend.log
 
 # 环境文件
-.env
+# .env - now tracked in git for development convenience
 .env.local
 .env.*.local
 

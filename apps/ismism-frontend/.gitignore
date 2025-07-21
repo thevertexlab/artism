@@ -12,7 +12,7 @@
 
 # 各类环境文件与密钥
 .DS_Store
-.env
+# .env - now tracked in git for development convenience
 .env.local
 .env.development.local
 .env.test.local
