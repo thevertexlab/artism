@@ -57,7 +57,20 @@ check_item "Python3 (>=3.9)" "python3 --version | grep -E 'Python 3\.(9|1[0-9])'
 check_item "MongoDB" "command -v mongod"
 
 # MongoDB 连接检查
-check_item "MongoDB 连接" "mongosh --quiet --eval 'db.adminCommand(\"ping\").ok' 2>/dev/null | grep -q '1'"
+echo -n "   MongoDB 连接: "
+ARTISM_ENV="${PROJECT_ROOT}/apps/artism-backend/.env"
+if [ -f "$ARTISM_ENV" ]; then
+    MONGODB_URI_FROM_ENV=$(grep "MONGODB_URI=" "$ARTISM_ENV" | cut -d'=' -f2- | tr -d '"' | tr -d "'")
+    echo -n "(${MONGODB_URI_FROM_ENV}) "
+fi
+
+if mongosh --quiet --eval 'db.adminCommand("ping").ok' --serverSelectionTimeoutMS 3000 2>/dev/null | grep -q '1'; then
+    echo -e "✅"
+    PASS=$((PASS + 1))
+else
+    echo -e "❌ (运行详细检查获取更多信息)"
+fi
+TOTAL=$((TOTAL + 1))
 
 echo ""
 echo "📝 配置文件:"

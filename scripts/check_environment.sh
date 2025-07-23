@@ -131,13 +131,117 @@ if command -v mongod &> /dev/null; then
     
     # 测试 MongoDB 连接
     if command -v mongosh &> /dev/null; then
-        if mongosh --quiet --eval "db.adminCommand('ping').ok" 2>/dev/null | grep -q "1"; then
-            echo -e "${CHECK} MongoDB 连接: 成功 (localhost:27017)"
+        echo -e "${INFO} 正在测试 MongoDB 连接..."
+
+        # 从 .env 文件读取连接字符串
+        ARTISM_ENV="${PROJECT_ROOT}/apps/artism-backend/.env"
+        if [ -f "$ARTISM_ENV" ]; then
+            MONGODB_URI_FROM_ENV=$(grep "MONGODB_URI=" "$ARTISM_ENV" | cut -d'=' -f2- | tr -d '"' | tr -d "'")
+            echo -e "${INFO}   使用 .env 文件: ${ARTISM_ENV}"
+            echo -e "${INFO}   连接字符串: ${MONGODB_URI_FROM_ENV}"
         else
-            echo -e "${CROSS} MongoDB 连接: 失败 (请检查服务是否启动)"
+            MONGODB_URI_FROM_ENV="mongodb://localhost:27017"
+            echo -e "${WARNING}   .env 文件不存在，使用默认连接: ${MONGODB_URI_FROM_ENV}"
         fi
+
+        # 检查 pymongo 是否可用
+        echo -e "${INFO}   检查 pymongo 模块..."
+        if python3 -c "import pymongo" 2>/dev/null; then
+            echo -e "${INFO}   使用 Python pymongo 测试连接..."
+
+            PYTHON_TEST_SCRIPT="
+import sys
+try:
+    import pymongo
+    client = pymongo.MongoClient('${MONGODB_URI_FROM_ENV}', serverSelectionTimeoutMS=5000)
+    client.admin.command('ping')
+    print('CONNECTION_SUCCESS')
+    sys.exit(0)
+except Exception as e:
+    print(f'CONNECTION_ERROR: {e}')
+    sys.exit(1)
+"
+
+            MONGO_TEST_OUTPUT=$(python3 -c "$PYTHON_TEST_SCRIPT" 2>&1)
+            MONGO_EXIT_CODE=$?
+        else
+            echo -e "${WARNING}   pymongo 未安装，使用基本端口检查..."
+            # 简单的端口连接测试
+            if nc -z localhost 27017 2>/dev/null; then
+                MONGO_TEST_OUTPUT="PORT_CONNECTION_SUCCESS"
+                MONGO_EXIT_CODE=0
+            else
+                MONGO_TEST_OUTPUT="PORT_CONNECTION_FAILED"
+                MONGO_EXIT_CODE=1
+            fi
+        fi
+
+        if [ $MONGO_EXIT_CODE -eq 0 ]; then
+            if echo "$MONGO_TEST_OUTPUT" | grep -q "CONNECTION_SUCCESS"; then
+                echo -e "${CHECK} MongoDB 连接: 成功 (完整测试)"
+                echo -e "${INFO}   连接测试通过"
+            elif echo "$MONGO_TEST_OUTPUT" | grep -q "PORT_CONNECTION_SUCCESS"; then
+                echo -e "${WARNING} MongoDB 连接: 基本可用 (仅端口测试)"
+                echo -e "${INFO}   建议安装 pymongo 进行完整测试: pip3 install pymongo"
+            else
+                echo -e "${CHECK} MongoDB 连接: 成功"
+                echo -e "${INFO}   连接测试通过"
+            fi
+        else
+            echo -e "${CROSS} MongoDB 连接: 失败"
+            echo -e "${INFO}   错误详情:"
+            echo -e "${INFO}   ├── 退出码: ${MONGO_EXIT_CODE}"
+            echo -e "${INFO}   ├── 连接字符串: ${MONGODB_URI_FROM_ENV}"
+            echo -e "${INFO}   └── 错误输出: ${MONGO_TEST_OUTPUT}"
+
+            # 提供诊断建议
+            echo -e "${WARNING}   可能的原因:"
+            if echo "$MONGO_TEST_OUTPUT" | grep -q "PORT_CONNECTION_FAILED"; then
+                echo -e "${INFO}     • MongoDB 端口 27017 无法连接"
+                echo -e "${INFO}     • 检查 MongoDB 服务是否启动"
+            elif echo "$MONGO_TEST_OUTPUT" | grep -q "ServerSelectionTimeoutError"; then
+                echo -e "${INFO}     • 连接超时，MongoDB 服务可能未响应"
+            elif echo "$MONGO_TEST_OUTPUT" | grep -q "ConnectionFailure"; then
+                echo -e "${INFO}     • 连接失败，检查 MongoDB 服务状态"
+            else
+                echo -e "${INFO}     • 其他连接问题: ${MONGO_TEST_OUTPUT}"
+            fi
+        fi
+
+        # 额外的连接诊断
+        echo -e "${INFO} 连接诊断:"
+
+        # 检查端口是否监听
+        if lsof -i :27017 | grep -q LISTEN; then
+            echo -e "${CHECK}   ├── 端口 27017: 正在监听"
+        else
+            echo -e "${CROSS}   ├── 端口 27017: 未监听"
+        fi
+
+        # 检查进程
+        if pgrep mongod > /dev/null; then
+            MONGOD_PID=$(pgrep mongod)
+            echo -e "${CHECK}   ├── mongod 进程: 运行中 (PID: ${MONGOD_PID})"
+        else
+            echo -e "${CROSS}   ├── mongod 进程: 未运行"
+        fi
+
+        # 检查 MongoDB 日志 (如果可访问)
+        if [[ "$OS" == "macOS" ]]; then
+            MONGO_LOG="/opt/homebrew/var/log/mongodb/mongo.log"
+            if [ -f "$MONGO_LOG" ]; then
+                echo -e "${INFO}   └── 最近日志: $(tail -n1 "$MONGO_LOG" 2>/dev/null || echo "无法读取日志")"
+            fi
+        elif [[ "$OS" == "Linux"* ]]; then
+            MONGO_LOG="/var/log/mongodb/mongod.log"
+            if [ -f "$MONGO_LOG" ]; then
+                echo -e "${INFO}   └── 最近日志: $(sudo tail -n1 "$MONGO_LOG" 2>/dev/null || echo "无法读取日志")"
+            fi
+        fi
+
     else
         echo -e "${WARNING} mongosh: 未安装，无法测试连接"
+        echo -e "${INFO}   安装命令: brew install mongosh (macOS) 或参考官方文档"
     fi
 else
     echo -e "${CROSS} MongoDB: 未安装"
