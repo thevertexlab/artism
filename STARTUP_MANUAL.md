@@ -529,3 +529,79 @@ echo "📈 检查完成"
 - [ ] 所有服务日志无错误
 
 **预计启动时间**: 首次 8-15 分钟 (含依赖安装) | 后续 2-3 分钟
+
+## 🌐 外部访问配置 (Ubuntu 服务器)
+
+### 🎯 一键配置防火墙
+
+如果你想在 Ubuntu 服务器上允许外部 IP 访问 Artism 服务：
+
+```bash
+# 配置防火墙开放端口 (需要 sudo 权限)
+npm run enable:ports
+# 或直接运行
+sudo bash scripts/enable_ports.sh
+```
+
+**功能特点**:
+- 🔥 自动配置 UFW 防火墙
+- 🔒 可选择限制特定 IP 访问
+- ⚠️ 可选择是否开放 MongoDB 端口
+- 📋 显示配置后的访问地址
+- 🛡️ 保留 SSH 访问权限
+
+### 🔍 检查外部访问配置
+
+```bash
+# 检查服务是否正确配置为允许外部访问
+npm run check:external
+# 或直接运行
+bash scripts/check_external_access.sh
+```
+
+**检查内容**:
+- 🌐 端口监听状态 (是否绑定到 0.0.0.0)
+- 🔥 防火墙规则配置
+- ⚙️ 服务配置检查
+- 🌍 网络连通性测试
+- 🔧 修复建议
+
+### 📋 服务配置 (已内置)
+
+所有服务已默认配置为支持外部访问：
+
+- ✅ **Artism Backend**: API_HOST=0.0.0.0 (已配置)
+- ✅ **AIDA Frontend**: next dev -H 0.0.0.0 (已配置)
+- ✅ **Ismism Frontend**: host: '0.0.0.0' (已配置)
+- ✅ **Ismism Backend**: 默认绑定所有接口 (已配置)
+
+### 🌍 外部访问地址
+
+配置完成后，可通过以下地址访问：
+
+```
+http://YOUR_SERVER_IP:3100  - AIDA Frontend
+http://YOUR_SERVER_IP:8000  - Artism Backend API
+http://YOUR_SERVER_IP:5273  - Ismism Frontend
+http://YOUR_SERVER_IP:5001  - Ismism Backend API
+```
+
+### ⚠️ 安全注意事项
+
+1. **生产环境建议**:
+   - 使用 HTTPS (SSL/TLS)
+   - 配置域名和反向代理
+   - 限制特定 IP 访问
+   - 不要开放 MongoDB 端口
+
+2. **云服务商配置**:
+   - AWS: 配置 EC2 安全组
+   - 阿里云: 配置 ECS 安全组
+   - 腾讯云: 配置 CVM 安全组
+
+3. **防火墙管理**:
+   ```bash
+   sudo ufw status          # 查看状态
+   sudo ufw delete [规则号]  # 删除规则
+   sudo ufw disable         # 禁用防火墙
+   ```
