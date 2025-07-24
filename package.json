@@ -1,0 +1,43 @@
+{
+  "name": "artism-monorepo",
+  "version": "1.0.0",
+  "description": "Artism 艺术主义生态系统 - 统一管理脚本",
+  "private": true,
+  "scripts": {
+    "all:install": "npm run install:aida-frontend && npm run install:ismism-frontend && npm run install:ismism-backend && npm run install:artism-backend",
+    "all:dev": "concurrently --kill-others-on-fail --prefix-colors \"cyan,magenta,yellow,green\" --prefix \"[{name}]\" --names \"artism-backend,aida-frontend,ismism-backend,ismism-frontend\" \"npm run dev:artism-backend\" \"npm run dev:aida-frontend\" \"npm run dev:ismism-backend\" \"npm run dev:ismism-frontend\"",
+    "install:aida-frontend": "echo \"📦 Installing AIDA Frontend dependencies...\" && cd apps/aida-frontend && npm install",
+    "install:ismism-frontend": "echo \"📦 Installing Ismism Frontend dependencies...\" && cd apps/ismism-frontend && npm install",
+    "install:ismism-backend": "echo \"📦 Installing Ismism Backend dependencies...\" && cd apps/ismism-backend && npm install",
+    "install:artism-backend": "echo \"🐍 Installing Artism Backend dependencies...\" && cd apps/artism-backend && pip3 install -r requirements.txt",
+    "dev:artism-backend": "cd apps/artism-backend && python3 main.py",
+    "dev:aida-frontend": "cd apps/aida-frontend && npm run dev",
+    "dev:ismism-backend": "cd apps/ismism-backend && npm run dev",
+    "dev:ismism-frontend": "cd apps/ismism-frontend && npm run dev",
+    "postall:dev": "npm run show:urls",
+    "show:urls": "echo \"\n🌐 ===== Artism 服务访问地址 =====\" && echo \"✅ AIDA Frontend:     http://localhost:3100\" && echo \"✅ AIDA API Docs:     http://localhost:8000/api/docs\" && echo \"✅ AIDA ReDoc:        http://localhost:8000/api/redoc\" && echo \"✅ Ismism Frontend:   http://localhost:5273\" && echo \"✅ Ismism API:        http://localhost:5001/api\" && echo \"🗄️ MongoDB:           mongodb://localhost:27017\" && echo \"=================================\"",
+    "check": "bash scripts/quick_check.sh",
+    "check:detailed": "bash scripts/check_environment.sh",
+    "stop": "echo \"🛑 Stopping all services...\" && lsof -ti:3100,5273,8000,5001 | xargs kill -9 2>/dev/null || echo \"No services to stop\"",
+    "clean": "npm run clean:aida-frontend && npm run clean:ismism-frontend",
+    "clean:aida-frontend": "cd apps/aida-frontend && npm run clean",
+    "clean:ismism-frontend": "cd apps/ismism-frontend && rm -rf .vite dist",
+    "help": "echo \"\n🚀 Artism 开发命令:\" && echo \"  npm run all:install    - 安装所有依赖\" && echo \"  npm run all:dev        - 启动所有服务\" && echo \"  npm run check          - 快速环境检查\" && echo \"  npm run check:detailed - 详细环境检查\" && echo \"  npm run stop           - 停止所有服务\" && echo \"  npm run clean          - 清理构建缓存\" && echo \"  npm run show:urls      - 显示访问地址\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=18.12.1",
+    "npm": ">=8.0.0"
+  },
+  "keywords": [
+    "artism",
+    "art",
+    "ai",
+    "monorepo",
+    "fullstack"
+  ],
+  "author": "Artism Team",
+  "license": "MIT"
+}

@@ -324,7 +324,7 @@ echo ""
 echo -e "${BLUE}🔌 端口占用检查${NC}"
 echo "----------------------------------"
 
-PORTS=(27017 8000 3000 5001 5173)
+PORTS=(27017 8000 3100 5001 5273)
 PORT_NAMES=("MongoDB" "Artism Backend" "AIDA Frontend" "Ismism Backend" "Ismism Frontend")
 
 for i in "${!PORTS[@]}"; do

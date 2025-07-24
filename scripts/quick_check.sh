@@ -82,7 +82,7 @@ echo ""
 echo "🔌 端口状态:"
 
 # 端口检查
-PORTS=(27017 8000 3000 5001 5173)
+PORTS=(27017 8000 3100 5001 5273)
 for port in "${PORTS[@]}"; do
     if lsof -i :$port &> /dev/null; then
         echo -e "⚠️  端口 $port: 被占用"

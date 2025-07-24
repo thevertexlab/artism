@@ -144,39 +144,67 @@
 - **MongoDB**: 6.0+
 - **Docker**: (可选，用于容器化部署)
 
-### 启动所有服务
+### 🎯 一键启动 (推荐)
 
 ```bash
 # 1. 启动数据库
 mongod
 
-# 2. 启动 AIDA 后端 (端口 8000)
+# 2. 环境检查
+npm run check
+
+# 3. 安装所有依赖
+npm run all:install
+
+# 4. 启动所有服务
+npm run all:dev
+```
+
+### 📋 手动启动 (详细控制)
+
+```bash
+# 1. 启动数据库
+mongod
+
+# 2. 启动 Artism 后端 (端口 8000)
 cd apps/artism-backend
 pip install -r requirements.txt
-cp .env.example .env  # 配置环境变量
-uvicorn main:app --reload
+python3 main.py
 
-# 3. 启动 AIDA 前端 (端口 3000)
+# 3. 启动 AIDA 前端 (端口 3100)
 cd apps/aida-frontend
 npm install
 npm run dev
 
-# 4. 启动 Ismism 后端 (端口 5000)
+# 4. 启动 Ismism 后端 (端口 5001)
 cd apps/ismism-backend
 npm install
 npm run dev
 
-# 5. 启动 Ismism 前端 (端口 5173)
+# 5. 启动 Ismism 前端 (端口 5273)
 cd apps/ismism-frontend
 npm install
 npm run dev
 ```
 
+### 🛠️ 开发命令
+
+```bash
+npm run help              # 显示所有可用命令
+npm run check             # 快速环境检查
+npm run check:detailed    # 详细环境检查
+npm run all:install       # 安装所有依赖
+npm run all:dev           # 启动所有服务
+npm run show:urls         # 显示访问地址
+npm run stop              # 停止所有服务
+npm run clean             # 清理构建缓存
+```
+
 ### 访问地址
-- **AIDA Frontend**: http://localhost:3000
+- **AIDA Frontend**: http://localhost:3100
 - **AIDA API Docs**: http://localhost:8000/api/docs
-- **Ismism Frontend**: http://localhost:5173
-- **Ismism API**: http://localhost:5000
+- **Ismism Frontend**: http://localhost:5273
+- **Ismism API**: http://localhost:5001
 
 ## 🛠️ 技术栈对比
 

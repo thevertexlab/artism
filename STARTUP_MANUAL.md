@@ -6,9 +6,9 @@
 |------|--------|------|--------|----------|
 | MongoDB | Database | 27017 | - | 1 |
 | Artism Backend | FastAPI/Python | 8000 | aida | 2 |
-| AIDA Frontend | Next.js | 3000 | - | 3 |
+| AIDA Frontend | Next.js | 3100 | - | 3 |
 | Ismism Backend | Express.js | 5001 | ismism-machine | 4 |
-| Ismism Frontend | React+Vite | 5173 | - | 5 |
+| Ismism Frontend | React+Vite | 5273 | - | 5 |
 
 ## 🖥️ 系统环境准备
 
@@ -91,16 +91,20 @@ mongod --version  # 应显示: db version v7.0.x
 #### 🚀 快速环境检查脚本
 ```bash
 # 快速检查所有关键环境 (推荐)
+npm run check
+# 或
 bash scripts/quick_check.sh
 
 # 详细环境检查 (包含完整诊断信息)
+npm run check:detailed
+# 或
 bash scripts/check_environment.sh
 ```
 
 #### 手动端口占用检查
 ```bash
 # 检查关键端口是否被占用
-sudo lsof -i :27017,8000,3000,5001,5173
+sudo lsof -i :27017,8000,3100,5001,5273
 # 预期输出: 空 (无进程占用) 或仅显示已知服务
 ```
 
@@ -138,6 +142,27 @@ npm config get prefix
 ```
 
 ## 🚀 服务启动流程
+
+### 🎯 一键启动 (推荐)
+
+```bash
+# 1. 安装所有依赖
+npm run all:install
+
+# 2. 启动所有服务
+npm run all:dev
+
+# 3. 查看访问地址
+npm run show:urls
+```
+
+**一键启动特点**:
+- 🔄 并发启动所有 4 个服务
+- 🎨 彩色日志输出，易于区分
+- 📊 自动显示访问地址
+- ⚡ 任一服务失败会停止所有服务
+
+### 📋 手动启动 (详细控制)
 
 ### 1. 启动 MongoDB
 
@@ -204,7 +229,7 @@ curl -s http://localhost:8000/api/v1/artists | head -n 5
 # 预期: JSON 响应或空数组 []
 ```
 
-### 3. 启动 AIDA Frontend (端口 3000)
+### 3. 启动 AIDA Frontend (端口 3100)
 
 #### 进入目录并安装依赖
 ```bash
@@ -221,17 +246,17 @@ npm run dev
 
 # 预期日志输出:
 # ▲ Next.js 14.x.x
-# - Local: http://localhost:3000
+# - Local: http://localhost:3100
 # ✓ Ready in 2.3s
 ```
 
 #### 验证服务
 ```bash
 # 新终端窗口执行
-curl -s http://localhost:3000 | grep -q "AIDA" && echo "✅ AIDA Frontend OK" || echo "❌ Frontend Failed"
+curl -s http://localhost:3100 | grep -q "AIDA" && echo "✅ AIDA Frontend OK" || echo "❌ Frontend Failed"
 
 # 检查页面标题
-curl -s http://localhost:3000 | grep -o '<title>.*</title>'
+curl -s http://localhost:3100 | grep -o '<title>.*</title>'
 ```
 
 ### 4. 启动 Ismism Backend (端口 5001)
@@ -260,7 +285,7 @@ npm run dev
 curl -s http://localhost:5001/api | grep -q "movements\|timeline" && echo "✅ Ismism Backend OK" || echo "❌ Backend Failed"
 ```
 
-### 5. 启动 Ismism Frontend (端口 5173)
+### 5. 启动 Ismism Frontend (端口 5273)
 
 #### 进入目录并安装依赖
 ```bash
@@ -277,24 +302,24 @@ npm run dev
 
 # 预期日志输出:
 # VITE v4.x.x ready in xxx ms
-# ➜ Local: http://localhost:5173/
+# ➜ Local: http://localhost:5273/
 # ➜ Network: use --host to expose
 ```
 
 #### 验证服务
 ```bash
 # 新终端窗口执行
-curl -s http://localhost:5173 | grep -q "Ismism\|timeline" && echo "✅ Ismism Frontend OK" || echo "❌ Frontend Failed"
+curl -s http://localhost:5273 | grep -q "Ismism\|timeline" && echo "✅ Ismism Frontend OK" || echo "❌ Frontend Failed"
 ```
 
 ## 🌐 访问地址和功能验证
 
 | 服务 | URL | 功能验证 |
 |------|-----|----------|
-| AIDA Frontend | http://localhost:3000 | AI艺术家数据库界面 |
+| AIDA Frontend | http://localhost:3100 | AI艺术家数据库界面 |
 | AIDA API Docs | http://localhost:8000/api/docs | Swagger UI 可访问 |
 | AIDA ReDoc | http://localhost:8000/api/redoc | ReDoc 文档可访问 |
-| Ismism Frontend | http://localhost:5173 | 艺术流派时间线界面 |
+| Ismism Frontend | http://localhost:5273 | 艺术流派时间线界面 |
 | Ismism API | http://localhost:5001/api | 返回 API 端点列表 |
 
 ### 完整系统健康检查脚本
@@ -310,13 +335,13 @@ mongosh --quiet --eval "db.adminCommand('ping').ok" 2>/dev/null && echo "✅ Mon
 curl -s -o /dev/null -w "%{http_code}" http://localhost:8000/api/docs | grep -q "200" && echo "✅ Artism Backend: 运行正常" || echo "❌ Artism Backend: 服务异常"
 
 # AIDA Frontend
-curl -s -o /dev/null -w "%{http_code}" http://localhost:3000 | grep -q "200" && echo "✅ AIDA Frontend: 运行正常" || echo "❌ AIDA Frontend: 服务异常"
+curl -s -o /dev/null -w "%{http_code}" http://localhost:3100 | grep -q "200" && echo "✅ AIDA Frontend: 运行正常" || echo "❌ AIDA Frontend: 服务异常"
 
 # Ismism Backend
 curl -s -o /dev/null -w "%{http_code}" http://localhost:5001/api | grep -q "200" && echo "✅ Ismism Backend: 运行正常" || echo "❌ Ismism Backend: 服务异常"
 
 # Ismism Frontend
-curl -s -o /dev/null -w "%{http_code}" http://localhost:5173 | grep -q "200" && echo "✅ Ismism Frontend: 运行正常" || echo "❌ Ismism Frontend: 服务异常"
+curl -s -o /dev/null -w "%{http_code}" http://localhost:5273 | grep -q "200" && echo "✅ Ismism Frontend: 运行正常" || echo "❌ Ismism Frontend: 服务异常"
 
 echo "========================"
 echo "🎯 所有服务状态检查完成"
@@ -407,20 +432,27 @@ echo "Ismism Frontend: $ISMISM_FRONTEND_PID"
 
 echo "✅ 所有服务启动完成!"
 echo "🌐 访问地址:"
-echo "  - AIDA Frontend: http://localhost:3000"
+echo "  - AIDA Frontend: http://localhost:3100"
 echo "  - AIDA API Docs: http://localhost:8000/api/docs"
-echo "  - Ismism Frontend: http://localhost:5173"
+echo "  - Ismism Frontend: http://localhost:5273"
 echo "  - Ismism API: http://localhost:5001/api"
 ```
 
-### 停止所有服务脚本 (stop_all.sh)
+### 停止所有服务
+
+#### 🎯 一键停止 (推荐)
+```bash
+npm run stop
+```
+
+#### 📋 手动停止脚本 (stop_all.sh)
 ```bash
 #!/bin/bash
 echo "🛑 停止 Artism 全栈服务"
 
 # 停止应用进程
 echo "🔧 停止应用服务..."
-lsof -ti:3000,5173,8000,5001 | xargs kill -9 2>/dev/null
+lsof -ti:3100,5273,8000,5001 | xargs kill -9 2>/dev/null
 
 # 停止 MongoDB
 if [[ "$OSTYPE" == "darwin"* ]]; then
@@ -442,14 +474,14 @@ echo "======================"
 
 # 检查端口占用
 echo "🔍 端口占用情况:"
-lsof -i :27017,8000,3000,5001,5173 | grep LISTEN
+lsof -i :27017,8000,3100,5001,5273 | grep LISTEN
 
 echo ""
 echo "🌐 服务可访问性:"
 
 # 检查各服务
-services=("MongoDB:27017" "Artism Backend:8000" "AIDA Frontend:3000" "Ismism Backend:5001" "Ismism Frontend:5173")
-urls=("" "http://localhost:8000/api/docs" "http://localhost:3000" "http://localhost:5001/api" "http://localhost:5173")
+services=("MongoDB:27017" "Artism Backend:8000" "AIDA Frontend:3100" "Ismism Backend:5001" "Ismism Frontend:5273")
+urls=("" "http://localhost:8000/api/docs" "http://localhost:3100" "http://localhost:5001/api" "http://localhost:5273")
 
 for i in "${!services[@]}"; do
     service="${services[$i]}"
