@@ -5,15 +5,19 @@
   "private": true,
   "scripts": {
     "all:install": "npm run install:aida-frontend && npm run install:ismism-frontend && npm run install:ismism-backend && npm run install:artism-backend",
-    "all:dev": "concurrently --kill-others-on-fail --prefix-colors \"cyan,magenta,yellow,green\" --prefix \"[{name}]\" --names \"artism-backend,aida-frontend,ismism-backend,ismism-frontend\" \"npm run dev:artism-backend\" \"npm run dev:aida-frontend\" \"npm run dev:ismism-backend\" \"npm run dev:ismism-frontend\"",
+    "all:dev": "concurrently --prefix-colors \"cyan,magenta,yellow,green\" --prefix \"[{name}]\" --names \"artism-backend,aida-frontend,ismism-backend,ismism-frontend\" --restart-tries 3 --restart-after 2000 \"npm run dev:artism-backend\" \"npm run dev:aida-frontend\" \"npm run dev:ismism-backend\" \"npm run dev:ismism-frontend\"",
     "install:aida-frontend": "echo \"📦 Installing AIDA Frontend dependencies...\" && cd apps/aida-frontend && npm install",
     "install:ismism-frontend": "echo \"📦 Installing Ismism Frontend dependencies...\" && cd apps/ismism-frontend && npm install",
     "install:ismism-backend": "echo \"📦 Installing Ismism Backend dependencies...\" && cd apps/ismism-backend && npm install",
-    "install:artism-backend": "echo \"🐍 Installing Artism Backend dependencies...\" && cd apps/artism-backend && pip3 install -r requirements.txt",
+    "install:artism-backend": "echo \"🐍 Installing Artism Backend dependencies...\" && cd apps/artism-backend && pip3 install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple/ --trusted-host pypi.tuna.tsinghua.edu.cn",
     "dev:artism-backend": "cd apps/artism-backend && python3 main.py",
     "dev:aida-frontend": "cd apps/aida-frontend && npm run dev",
     "dev:ismism-backend": "cd apps/ismism-backend && npm run dev",
     "dev:ismism-frontend": "cd apps/ismism-frontend && npm run dev",
+    "dev:single:artism-backend": "echo \"🚀 Starting Artism Backend only...\" && cd apps/artism-backend && python3 main.py",
+    "dev:single:aida-frontend": "echo \"🚀 Starting AIDA Frontend only...\" && cd apps/aida-frontend && npm run dev",
+    "dev:single:ismism-backend": "echo \"🚀 Starting Ismism Backend only...\" && cd apps/ismism-backend && npm run dev",
+    "dev:single:ismism-frontend": "echo \"🚀 Starting Ismism Frontend only...\" && cd apps/ismism-frontend && npm run dev",
     "postall:dev": "npm run show:urls",
     "show:urls": "echo \"\n🌐 ===== Artism 服务访问地址 =====\" && echo \"✅ AIDA Frontend:     http://localhost:3100\" && echo \"✅ AIDA API Docs:     http://localhost:8000/api/docs\" && echo \"✅ AIDA ReDoc:        http://localhost:8000/api/redoc\" && echo \"✅ Ismism Frontend:   http://localhost:5273\" && echo \"✅ Ismism API:        http://localhost:5001/api\" && echo \"🗄️ MongoDB:           mongodb://localhost:27017\" && echo \"=================================\"",
     "check": "bash scripts/quick_check.sh",
@@ -22,7 +26,7 @@
     "clean": "npm run clean:aida-frontend && npm run clean:ismism-frontend",
     "clean:aida-frontend": "cd apps/aida-frontend && npm run clean",
     "clean:ismism-frontend": "cd apps/ismism-frontend && rm -rf .vite dist",
-    "help": "echo \"\n🚀 Artism 开发命令:\" && echo \"  npm run all:install    - 安装所有依赖\" && echo \"  npm run all:dev        - 启动所有服务\" && echo \"  npm run check          - 快速环境检查\" && echo \"  npm run check:detailed - 详细环境检查\" && echo \"  npm run stop           - 停止所有服务\" && echo \"  npm run clean          - 清理构建缓存\" && echo \"  npm run show:urls      - 显示访问地址\""
+    "help": "echo \"\n🚀 Artism 开发命令:\" && echo \"  npm run all:install    - 安装所有依赖\" && echo \"  npm run all:dev        - 启动所有服务 (自动重启)\" && echo \"  npm run check          - 快速环境检查\" && echo \"  npm run check:detailed - 详细环境检查\" && echo \"  npm run stop           - 停止所有服务\" && echo \"  npm run clean          - 清理构建缓存\" && echo \"  npm run show:urls      - 显示访问地址\" && echo \"\n🔧 单独服务管理:\" && echo \"  npm run dev:single:artism-backend  - 仅启动后端API\" && echo \"  npm run dev:single:aida-frontend   - 仅启动AIDA前端\" && echo \"  npm run dev:single:ismism-backend  - 仅启动Ismism后端\" && echo \"  npm run dev:single:ismism-frontend - 仅启动Ismism前端\""
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
