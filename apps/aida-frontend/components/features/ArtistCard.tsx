@@ -5,7 +5,7 @@ import { Card, Text, Image, Badge, Group } from '@mantine/core';
 import Link from 'next/link';
 import type { Artist } from '@/types/models';
 
-// 工具函数：截断文本
+// Utility function: truncate text
 const truncateText = (text: string, maxLength: number): string => {
   if (text.length <= maxLength) return text;
   return text.substring(0, maxLength) + '...';
@@ -29,7 +29,7 @@ export function ArtistCard({ artist, onSelect }: ArtistCardProps) {
     ? `${artist.birth_year} - ${artist.death_year || 'Present'}`
     : '';
   
-  // 如果有 onSelect 回调，渲染为普通 div，否则渲染为链接
+  // If there's an onSelect callback, render as plain div, otherwise render as link
   if (onSelect) {
     return (
       <Card 
@@ -45,7 +45,7 @@ export function ArtistCard({ artist, onSelect }: ArtistCardProps) {
     );
   }
   
-  // 渲染为链接
+  // Render as link
   return (
     <Link href={`/artists/${artist.id}`} className="block h-full">
       <Card 
@@ -60,7 +60,7 @@ export function ArtistCard({ artist, onSelect }: ArtistCardProps) {
     </Link>
   );
   
-  // 卡片内容渲染函数
+  // Card content rendering function
   function renderCardContent() {
     return (
       <>

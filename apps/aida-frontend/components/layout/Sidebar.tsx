@@ -33,14 +33,14 @@ const Sidebar = () => {
   const { theme, setTheme } = useTheme();
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
 
-  // 用户认证状态
+  // User authentication state
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState<{name: string; email: string; avatar?: string} | null>(null);
 
   useEffect(() => {
     setIsMounted(true);
 
-    // 检查本地存储的登录状态
+    // Check local storage for login status
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
       try {
@@ -54,20 +54,20 @@ const Sidebar = () => {
     }
   }, []);
 
-  // 简单的导航函数
+  // Simple navigation function
   const handleNavigation = (path: string) => {
     try {
       router.push(path);
     } catch (error) {
       console.error('Navigation error:', error);
-      // 备用导航方法
+      // Fallback navigation method
       window.location.href = path;
     }
   };
 
-  // 登录函数
+  // Login function
   const handleLogin = () => {
-    // 模拟登录 - 实际项目中应该调用真实的认证API
+    // Mock login - should call real authentication API in actual project
     const userData = {
       name: 'Demo User',
       email: 'demo@artism.ai',
@@ -78,16 +78,16 @@ const Sidebar = () => {
     localStorage.setItem('user', JSON.stringify(userData));
   };
 
-  // 登出函数
+  // Logout function
   const handleLogout = () => {
     setUser(null);
     setIsLoggedIn(false);
     localStorage.removeItem('user');
   };
 
-  // 注册函数
+  // Signup function
   const handleSignup = () => {
-    // 模拟注册 - 实际项目中应该调用真实的注册API
+    // Mock signup - should call real registration API in actual project
     const userData = {
       name: 'New User',
       email: 'newuser@artism.ai',
@@ -234,9 +234,9 @@ const Sidebar = () => {
         {/* User Authentication Section */}
         <div className="mt-4 pt-4 border-t border-gray-200 dark:border-[#333]">
           {isLoggedIn ? (
-            // 已登录状态
+            // Logged in state
             <>
-              {/* 用户信息 */}
+              {/* User information */}
               <div className={`flex items-center space-x-3 px-3 py-2 mb-2 ${!isExpanded && 'justify-center'}`}>
                 <img
                   src={user?.avatar || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face'}
@@ -255,7 +255,7 @@ const Sidebar = () => {
                 )}
               </div>
 
-              {/* 登出按钮 */}
+              {/* Logout button */}
               <button
                 onClick={handleLogout}
                 className={`
@@ -271,9 +271,9 @@ const Sidebar = () => {
               </button>
             </>
           ) : (
-            // 未登录状态
+            // Not logged in state
             <>
-              {/* 登录按钮 */}
+              {/* Login button */}
               <button
                 onClick={handleLogin}
                 className={`
@@ -288,7 +288,7 @@ const Sidebar = () => {
                 )}
               </button>
 
-              {/* 注册按钮 */}
+              {/* Sign up button */}
               <button
                 onClick={handleSignup}
                 className={`

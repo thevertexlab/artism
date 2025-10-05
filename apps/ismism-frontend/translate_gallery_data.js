@@ -1,12 +1,12 @@
 const fs = require('fs');
 const path = require('path');
 
-// 读取原始数据文件
+// Read original data file
 const dataFilePath = path.join(__dirname, 'src/data/galleryImages.json');
-// 备份原始文件
+// Backup original file
 const backupFilePath = path.join(__dirname, 'src/data/galleryImages_backup.json');
 
-// 艺术风格中英文对照表
+// Art style Chinese-English translation table
 const styleTranslations = {
   '印象派': 'Impressionism',
   '后印象派': 'Post-Impressionism',
@@ -32,7 +32,7 @@ const styleTranslations = {
   '新印象派': 'Neo-Impressionism'
 };
 
-// 艺术家中英文对照表
+// Artist Chinese-English translation table
 const artistTranslations = {
   '文森特·梵高': 'Vincent van Gogh',
   '萨尔瓦多·达利': 'Salvador Dalí',
@@ -56,31 +56,31 @@ const artistTranslations = {
   '马塞尔·杜尚': 'Marcel Duchamp'
 };
 
-// 转换描述文本的函数
+// Function to convert description text
 function translateDescription(description, artist, year, style) {
-  // 检查是否已经是英文
+  // Check if it's already in English
   if (!description.includes('这是一幅')) {
     return description;
   }
-  
+
   const englishStyle = styleTranslations[style] || style;
   const englishArtist = artistTranslations[artist] || artist;
-  
+
   return `This is a ${englishStyle.toLowerCase()} work created by ${englishArtist} in ${year}. This artwork showcases the artist's unique perspective and creative style, worthy of careful appreciation.`;
 }
 
 try {
-  // 读取JSON文件
+  // Read JSON file
   const fileContent = fs.readFileSync(dataFilePath, 'utf8');
   const data = JSON.parse(fileContent);
-  
-  // 备份原始文件
+
+  // Backup original file
   fs.writeFileSync(backupFilePath, fileContent, 'utf8');
   console.log(`Original file backed up to ${backupFilePath}`);
-  
-  // 转换数据
+
+  // Convert data
   const translatedData = data.map((item, index) => {
-    // 获取原始ID中的数字（如果有）
+    // Get number from original ID (if any)
     const idMatch = item.id.match(/\d+/);
     const idNumber = idMatch ? idMatch[0] : (index + 1);
     
@@ -95,10 +95,10 @@ try {
     };
   });
   
-  // 写回原始文件
+  // Write back to original file
   fs.writeFileSync(dataFilePath, JSON.stringify(translatedData, null, 2), 'utf8');
   console.log(`Translation complete! Original file has been updated.`);
-  
+
 } catch (error) {
   console.error('Error processing the file:', error);
-} 
+}

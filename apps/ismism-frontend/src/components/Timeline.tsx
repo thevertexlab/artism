@@ -9,7 +9,7 @@ import { useToast } from "./ui/use-toast";
 import { IArtStyle } from '../types/art';
 import { artMovementService } from '../services/artMovementService';
 
-// 开发模式下启用性能分析
+// Enable performance analysis in development mode
 const isDev = import.meta.env.DEV;
 const logPerformance = (label: string, startTime: number) => {
   if (isDev) {
@@ -17,7 +17,7 @@ const logPerformance = (label: string, startTime: number) => {
   }
 };
 
-// 添加隐藏滚动条的CSS样式
+// Add CSS styles to hide scrollbars
 const hideScrollbarStyle = {
   '&::-webkit-scrollbar': {
     display: 'none',
@@ -26,9 +26,9 @@ const hideScrollbarStyle = {
   '-ms-overflow-style': 'none',
 };
 
-// 添加CSS样式到文档头部，控制悬停效果
+// Add CSS styles to document head for hover effects
 const addHoverStyles = () => {
-  // 检查是否已经存在该样式
+  // Check if the style already exists
   if (!document.getElementById('timeline-hover-styles')) {
     const styleElement = document.createElement('style');
     styleElement.id = 'timeline-hover-styles';
@@ -44,7 +44,7 @@ const addHoverStyles = () => {
   }
 };
 
-// 创建一个会话存储键
+// Create session storage keys
 const TIMELINE_POSITION_KEY = 'timeline_position';
 const TIMELINE_SCROLL_POSITION_KEY = 'timeline_scroll_position';
 
@@ -59,34 +59,34 @@ const Timeline: React.FC = () => {
   const timelineListRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   
-  // 当前选中的艺术主义节点
+  // Currently selected art movement node
   const [selectedNode, setSelectedNode] = useState<IArtStyle | null>(null);
-  
-  // 改为直接使用时间轴位置状态
-  const [timelinePosition, setTimelinePosition] = useState(0); // 0 表示中间位置，正负表示向左右偏移
+
+  // Use timeline position state directly
+  const [timelinePosition, setTimelinePosition] = useState(0); // 0 means center position, positive/negative means left/right offset
   const timelineContainerRef = useRef<HTMLDivElement>(null);
   const thumbnailsRef = useRef<{ [key: string]: HTMLDivElement | null }>({});
-  
-  // 节点引用，用于滚动到特定节点
+
+  // Node references for scrolling to specific nodes
   const nodeRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
-  // 拖动相关状态
+  // Drag-related states
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [startPosition, setStartPosition] = useState(0);
-  
-  // 缩略图拖动状态
+
+  // Thumbnail drag states
   const [isThumbnailDragging, setIsThumbnailDragging] = useState(false);
   const [thumbnailStartX, setThumbnailStartX] = useState(0);
   const [thumbnailScrollLeft, setThumbnailScrollLeft] = useState(0);
-  
-  // 艺术主义名称行拖动状态
+
+  // Art movement name row drag states
   // const [isNameRowDragging, setIsNameRowDragging] = useState(false);
   // const [nameRowStartX, setNameRowStartX] = useState(0);
   // const [nameRowStartPosition, setNameRowStartPosition] = useState(0);
   // const nameRowRef = useRef<HTMLDivElement>(null);
 
-  // 图片缓存映射，减少重复请求
+  // Image cache mapping to reduce duplicate requests
   const imgCache = useRef<Map<string, string>>(new Map());
 
   // 使用记忆化优化筛选和排序后的节点列表
@@ -109,22 +109,22 @@ const Timeline: React.FC = () => {
         (node.styleMovement && node.styleMovement.toLowerCase().includes(searchTerm.toLowerCase()));
     });
 
-    // 排序节点
+    // Sort nodes
     return [...filteredNodes].sort((a, b) => (a.year || 0) - (b.year || 0));
   }, [timelineNodes, searchTerm]);
 
-  // 计算时间轴的最小和最大年份
+  // Calculate minimum and maximum years for timeline
   const { minYear, maxYear, timeRange } = React.useMemo(() => {
     if (!sortedNodes.length) {
       return { minYear: 1800, maxYear: 2023, timeRange: 223 };
     }
-    
+
     const min = sortedNodes.length > 0 ? (sortedNodes[0].year || 1800) : 1800;
     const max = sortedNodes.length > 0 ? (sortedNodes[sortedNodes.length - 1].year || 2023) : 2023;
-    return { 
-      minYear: min, 
-      maxYear: max, 
-      timeRange: max - min || 1 // 避免除以零
+    return {
+      minYear: min,
+      maxYear: max,
+      timeRange: max - min || 1 // Avoid division by zero
     };
   }, [sortedNodes]);
   
@@ -143,31 +143,31 @@ const Timeline: React.FC = () => {
       }
     });
     
-    // 如果找到了节点，滚动到该节点
+    // If node is found, scroll to it
     if (closestNode && nodeRefs.current[closestNode.id]) {
       nodeRefs.current[closestNode.id]?.scrollIntoView({
         behavior: 'smooth',
         block: 'center'
       });
-      
-      // 高亮显示
+
+      // Highlight display
       setHighlightedNodeId(closestNode.id);
-      
-      // 略微延时后取消高亮
+
+      // Remove highlight after slight delay
       setTimeout(() => {
         setHighlightedNodeId(null);
       }, 2000);
     }
   };
   
-  // 加载时间线节点
+  // Load timeline nodes
   useEffect(() => {
     fetchNodes();
-    
-    // 添加悬停样式
+
+    // Add hover styles
     addHoverStyles();
-    
-    // 预加载常用的图片资源
+
+    // Preload common image resources
     const preloadImages = () => {
       const imagesToPreload = Array.from({ length: 10 }).map((_, i) => `/TestData/1004${i}.jpg`);
       imagesToPreload.forEach(src => {
@@ -176,8 +176,8 @@ const Timeline: React.FC = () => {
       });
     };
     preloadImages();
-    
-    // 组件卸载时清理样式
+
+    // Clean up styles when component unmounts
     return () => {
       const styleElement = document.getElementById('timeline-hover-styles');
       if (styleElement) {
@@ -523,7 +523,7 @@ const Timeline: React.FC = () => {
       }, 300);
     } catch (error) {
       console.error('Failed to fetch art movement details:', error);
-      toast("获取艺术主义详情失败", "error", 3000);
+      toast("Failed to fetch art movement details", "error", 3000);
     }
   };
   
@@ -684,23 +684,23 @@ const Timeline: React.FC = () => {
 
   return (
     <div className="relative w-full h-full overflow-hidden">
-      {/* 显示错误信息 */}
+      {/* Display error messages */}
       {error && (
         <div className="bg-red-500/20 text-red-700 p-4 rounded-md mb-4 mx-auto max-w-md mt-4">
-          <p className="font-semibold">加载数据时出错：</p>
+          <p className="font-semibold">Error loading data:</p>
           <p>{error}</p>
         </div>
       )}
-      
-      {/* 显示加载状态 */}
+
+      {/* Display loading state */}
       {loading && (
         <div className="flex items-center justify-center h-40 mt-8">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-          <p className="ml-3 text-blue-500">正在加载艺术运动数据...</p>
+          <p className="ml-3 text-blue-500">Loading art movement data...</p>
         </div>
       )}
       
-      {/* 标题和搜索栏 */}
+      {/* Title and search bar */}
       <motion.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -709,39 +709,39 @@ const Timeline: React.FC = () => {
       >
         <div className="flex flex-col gap-6">
           <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent text-center">
-            艺术主义时间线
+            Art Movement Timeline
           </h1>
-          
+
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2">
               <div className="relative">
                 <Search className="h-4 w-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
                 <input
                   type="text"
-                  placeholder="搜索艺术主义..." 
+                  placeholder="Search art movements..."
                   className="pl-10 pr-4 py-2 rounded-full bg-white/5 hover:bg-white/10 transition-colors border border-white/10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
             </div>
-            
+
             {selectedNode && (
-              <Button 
+              <Button
                 variant="outline"
                 size="sm"
                 onClick={handleCloseDetail}
                 className="flex items-center gap-1 px-3 py-1 rounded-full bg-white/10 hover:bg-white/20 text-sm"
               >
                 <X className="h-3.5 w-3.5" />
-                关闭详情
+                Close Details
               </Button>
             )}
           </div>
         </div>
       </motion.div>
 
-      {/* 顶部时间轴 - 固定在页面顶部，紧贴导航栏 */}
+      {/* Top timeline - fixed at page top, close to navigation bar */}
       <div className="sticky top-16 bg-background z-10 border-b border-white/5 shadow-md -mt-8">
         <div className="relative px-8" ref={timelineRef}>
           {/* 时间轴线 */}
@@ -766,9 +766,9 @@ const Timeline: React.FC = () => {
             <ChevronRight className="h-4 w-4" />
           </Button>
           
-          {/* 年份标记容器，提供固定高度 */}
+          {/* Year mark container with fixed height */}
           <div className="relative h-10 mb-2" ref={timelineContainerRef}>
-            {/* 年份标记，支持水平滚动和鼠标拖动 */}
+            {/* Year marks with horizontal scrolling and mouse dragging support */}
             <div 
               className="absolute left-0 right-0 mt-2 hide-scrollbar cursor-grab active:cursor-grabbing" 
               style={{ 
@@ -781,10 +781,10 @@ const Timeline: React.FC = () => {
               onMouseLeave={handleMouseLeave}
               onMouseMove={handleMouseMove}
             >
-              {/* 年份标记背景轨道 */}
+              {/* Year mark background track */}
               <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-white/5 transform -translate-y-1/2"></div>
-              
-              {/* 年份标记 - 使用绝对定位和时间轴位置 */}
+
+              {/* Year marks - using absolute positioning and timeline position */}
               {yearMarks.map((year, index) => (
                 <button
                   key={index}
@@ -806,7 +806,7 @@ const Timeline: React.FC = () => {
         </div>
       </div>
 
-      {/* 选中的艺术主义详情或艺术主义行列表 */}
+      {/* Selected art movement details or art movement list */}
       <AnimatePresence mode="wait">
         {sortedNodes.length > 0 ? (
           <motion.div 
@@ -828,9 +828,9 @@ const Timeline: React.FC = () => {
                 className={`flex flex-col items-start gap-2 border-b border-white/10 pb-3 
                   ${highlightedNodeId === node.id ? 'bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-lg p-2 -mx-4 shadow-[0_0_15px_rgba(59,130,246,0.3)]' : ''}`}
               >
-                {/* 艺术主义时间轴位置标记 */}
+                {/* Art movement timeline position marker */}
                 <div className="w-full relative h-12 overflow-hidden">
-                  {/* 固定在左侧的标签 */}
+                  {/* Fixed label on the left side */}
                   <div 
                     className="absolute left-0 top-1/2 transform -translate-y-1/2 z-20 bg-black/60 backdrop-blur-sm px-4 py-2 rounded-r-lg border-r border-t border-b border-white/10 flex items-center gap-3 shadow-lg cursor-pointer hover:bg-black/80 transition-colors group"
                     onClick={(e) => handleTimePointClick(node, e)}
@@ -842,31 +842,31 @@ const Timeline: React.FC = () => {
                     <span className="text-sm text-blue-300 bg-blue-500/20 px-2 py-0.5 rounded-full group-hover:bg-blue-500/30 transition-colors">{node.year}</span>
                   </div>
                   
-                  {/* 内容容器，用于横向滚动时间轴，添加左边距给固定标签留出空间 */}
+                  {/* Content container for horizontal timeline scrolling, with left margin for fixed label space */}
                   <div className="w-full h-full relative pl-[200px]">
-                    {/* 蓝色线 */}
+                    {/* Blue line */}
                     <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-blue-500/20 transform -translate-y-1/2"></div>
-                    
-                    {/* 时间点标记 - 可点击显示详情 */}
+
+                    {/* Time point marker - clickable to show details */}
                     <div 
                       id={`year-${node.year}`}
                       className="absolute top-1/2 w-3 h-3 bg-blue-500 rounded-full z-10 cursor-pointer hover:bg-blue-400 hover:scale-125 transition-all"
                       style={{ 
                         left: `${getPositionPercentage(node.year)}%`,
                         transform: 'translate(-50%, -50%)',
-                        marginTop: '0' // 确保与时间轴线对齐
+                        marginTop: '0' // Ensure alignment with timeline
                       }}
                       onClick={(e) => handleTimePointClick(node, e)}
                     ></div>
                   
-                    {/* 时间点之后的缩略图容器 */}
+                    {/* Thumbnail container after time point */}
                     <div 
                       className="absolute top-0 h-full overflow-x-auto cursor-grab active:cursor-grabbing hide-scrollbar bg-transparent group hover:bg-blue-500/5 transition-colors rounded-md"
                       style={{ 
                         left: `${getPositionPercentage(node.year)}%`,
                         right: '0',
                         paddingLeft: '10px',
-                        width: '100vw' // 使用视口宽度，确保容器足够宽
+                        width: '100vw' // Use viewport width to ensure container is wide enough
                       }}
                       ref={el => thumbnailsRef.current[node.id] = el}
                       onMouseDown={(e) => handleThumbnailMouseDown(e, node.id)}
@@ -876,7 +876,7 @@ const Timeline: React.FC = () => {
                     >
                       <div className="flex items-center h-full gap-2 pr-4 pl-2" style={{ width: 'max-content', paddingRight: '200px' }}>
                         <GripHorizontal className="h-4 w-4 text-white/30 group-hover:text-white/60 flex-shrink-0 transition-colors" />
-                        {/* 缩略图 - 限制数量为5个，提高性能 */}
+                        {/* Thumbnails - limited to 5 for better performance */}
                         {Array.from({ length: Math.min(5, node.images?.length || 5) }).map((_, imgIndex) => (
                           <div 
                             key={imgIndex} 
@@ -884,13 +884,13 @@ const Timeline: React.FC = () => {
                             onClick={(e) => {
                               e.stopPropagation();
                               
-                              // 恢复缩略图点击预览大图功能
+                              // Restore thumbnail click preview functionality
                               const image = getThumbnailUrl(node, imgIndex);
                               const artistIndex = imgIndex % node.artists.length;
                               setPreviewImage({
                                 src: image,
                                 title: node.title,
-                                artist: node.artists[artistIndex] || '未知艺术家',
+                                artist: node.artists[artistIndex] || 'Unknown Artist',
                                 year: node.year + (imgIndex % 10)
                               });
                             }}
@@ -910,16 +910,16 @@ const Timeline: React.FC = () => {
                   </div>
                 </div>
                 
-                {/* 艺术主义名称和信息 */}
+                {/* Art movement name and information */}
                 <div className="w-full pl-4 relative">
                   <div 
                     className="flex items-center gap-3 relative group px-3 py-2 hover:bg-blue-500/10 rounded-md transition-colors cursor-pointer"
                     onClick={(e) => handleTimePointClick(node, e)}
                   >
-                    {/* 移除空的占位元素 */}
+                    {/* Remove empty placeholder elements */}
                   </div>
                   
-                  {/* 艺术主义详情展开区 */}
+                  {/* Art movement details expansion area */}
                   {selectedNode && selectedNode.id === node.id && (
                     <motion.div 
                       key={`detail-${node.id}`}
@@ -937,7 +937,7 @@ const Timeline: React.FC = () => {
               </div>
             </motion.div>
             ))}
-            {/* 底部额外留白空间 */}
+            {/* Bottom extra whitespace */}
             <div className="h-40"></div>
           </motion.div>
         ) : (
@@ -945,13 +945,13 @@ const Timeline: React.FC = () => {
             <div className="p-5 bg-[rgba(15,15,20,0.7)] backdrop-blur-sm border border-white/10 rounded-lg shadow-glow-sm mb-4">
               <Search className="h-10 w-10 text-gray-400 mb-2" />
             </div>
-            <h3 className="text-xl font-semibold text-gray-400 mb-2">未找到时间线节点</h3>
-            <p className="text-gray-500">请尝试不同的搜索条件</p>
+            <h3 className="text-xl font-semibold text-gray-400 mb-2">No timeline nodes found</h3>
+            <p className="text-gray-500">Please try different search criteria</p>
           </div>
         )}
       </AnimatePresence>
       
-      {/* 大图预览弹窗 */}
+      {/* Large image preview modal */}
       <AnimatePresence>
         {previewImage && (
           <motion.div
@@ -970,7 +970,7 @@ const Timeline: React.FC = () => {
             >
               <img 
                 src={previewImage.src} 
-                alt={`${previewImage.title} 作品详图`} 
+                alt={`${previewImage.title} artwork detail`}
                 className="max-h-[80vh] max-w-full object-contain rounded-md" 
               />
               <div className="absolute bottom-0 left-0 right-0 bg-black/70 p-3 backdrop-blur-sm">

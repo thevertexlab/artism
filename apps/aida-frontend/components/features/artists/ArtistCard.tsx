@@ -8,10 +8,10 @@ interface ArtistCardProps {
 }
 
 export function ArtistCard({ artist }: ArtistCardProps) {
-  // 使用默认图片，如果艺术家没有图片
+  // Use default image if artist has no image
   const imageUrl = artist.image_url || 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=80';
-  
-  // 计算生卒年份显示
+
+  // Calculate birth and death year display
   const yearsText = artist.birth_year 
     ? `${artist.birth_year} - ${artist.death_year || 'Present'}`
     : 'Unknown';

@@ -86,7 +86,7 @@ const SimpleNavbar: React.FC<SimpleNavbarProps> = ({ onMenuClick }) => {
                 }
               >
                 <Wifi className="h-4 w-4 mr-1.5" />
-                <span>连接测试</span>
+                <span>Connection Test</span>
               </NavLink>
             </div>
         </div>

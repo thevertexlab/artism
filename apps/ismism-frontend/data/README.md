@@ -1,62 +1,62 @@
-# 艺术主义数据库
+# Art Movements Database
 
-这个本地测试数据库包含时间轴上所有艺术主义的信息和图片资源。
+This local test database contains information and image resources for all art movements on the timeline.
 
-## 文件结构
+## File Structure
 
-- `artStyles.json` - 包含所有艺术主义的详细信息，包括标题、年份、描述、艺术家等
-- `connections.json` - 包含艺术主义之间的关系和影响
-- `imageSearchUrls.json` - 示例图片URL，可用于下载或显示艺术作品
-- `images/` - 按艺术风格组织的图片文件夹
-  - `impressionism/` - 印象派艺术作品图片
-  - `cubism/` - 立体主义艺术作品图片
-  - `surrealism/` - 超现实主义艺术作品图片
-  - 等等...
+- `artStyles.json` - Contains detailed information about all art movements, including titles, years, descriptions, artists, etc.
+- `connections.json` - Contains relationships and influences between art movements
+- `imageSearchUrls.json` - Sample image URLs that can be used to download or display artworks
+- `images/` - Image folders organized by art style
+  - `impressionism/` - Impressionist artwork images
+  - `cubism/` - Cubist artwork images
+  - `surrealism/` - Surrealist artwork images
+  - etc...
 
-## 如何使用
+## How to Use
 
-### 添加图片
+### Adding Images
 
-对于每个艺术主义，你可以在对应的文件夹中添加相关的图片:
+For each art movement, you can add related images in the corresponding folder:
 
-1. 导航到相应的文件夹，例如 `images/impressionism/`
-2. 将图片保存为 `[艺术家名]_[作品名].jpg` 格式
+1. Navigate to the appropriate folder, e.g., `images/impressionism/`
+2. Save images in the format `[Artist Name]_[Artwork Name].jpg`
 
-### 使用数据
+### Using Data
 
-你可以通过以下方式使用此数据:
+You can use this data in the following ways:
 
 ```javascript
-// 读取艺术风格数据
+// Read art style data
 const artStyles = require('./data/artStyles.json');
 
-// 读取连接数据
+// Read connection data
 const connections = require('./data/connections.json');
 
-// 显示特定风格信息
+// Display specific style information
 const impressionism = artStyles.find(style => style.id === 'impressionism');
-console.log(impressionism.title);  // 输出: 印象派
+console.log(impressionism.title);  // Output: Impressionism
 ```
 
-## 数据格式
+## Data Format
 
-### 艺术风格对象
+### Art Style Object
 
 ```json
 {
   "id": "cubism",
-  "title": "立体主义",
+  "title": "Cubism",
   "year": 1907,
-  "description": "将对象分解为几何形状，从多个角度同时表现",
-  "artists": ["毕加索", "布拉克"],
+  "description": "Breaks down objects into geometric shapes, representing them from multiple angles simultaneously",
+  "artists": ["Picasso", "Braque"],
   "styleMovement": "cubism",
-  "influences": ["塞尚", "非洲艺术"],
-  "influencedBy": ["印象派"],
-  "tags": ["立体主义", "法国", "20世纪初"]
+  "influences": ["Cézanne", "African Art"],
+  "influencedBy": ["Impressionism"],
+  "tags": ["Cubism", "France", "Early 20th Century"]
 }
 ```
 
-### 连接对象
+### Connection Object
 
 ```json
 {
@@ -66,6 +66,6 @@ console.log(impressionism.title);  // 输出: 印象派
 }
 ```
 
-## 搜索和扩展
+## Search and Extension
 
-你可以通过替换 `imageSearchUrls.json` 中的示例URL来添加真实的图片链接，然后使用脚本下载这些图片到对应文件夹。 
+You can add real image links by replacing the sample URLs in `imageSearchUrls.json`, then use scripts to download these images to the corresponding folders.

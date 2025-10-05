@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 
-// 动态导入地图组件以避免SSR问题
+// Dynamically import map components to avoid SSR issues
 const MapContainer = dynamic(() => import('react-leaflet').then(mod => mod.MapContainer), { ssr: false });
 const TileLayer = dynamic(() => import('react-leaflet').then(mod => mod.TileLayer), { ssr: false });
 const Marker = dynamic(() => import('react-leaflet').then(mod => mod.Marker), { ssr: false });
@@ -26,9 +26,9 @@ interface User {
   artStyle: string;
 }
 
-// 创建自定义头像图标
+// Create custom avatar icon
 const createAvatarIcon = (avatarUrl: string, isOnline: boolean) => {
-  // 动态导入 Leaflet 以避免 SSR 问题
+  // Dynamically import Leaflet to avoid SSR issues
   if (typeof window === 'undefined') return null;
   
   const L = require('leaflet');
@@ -87,11 +87,11 @@ export default function WorldMapPage() {
   const [startingChatWith, setStartingChatWith] = useState<string | null>(null);
   const router = useRouter();
 
-  // 处理开始聊天
+  // Handle start chat
   const handleStartChat = async (user: User) => {
     setStartingChatWith(user.id);
 
-    // 将用户信息编码为URL参数
+    // Encode user information as URL parameters
     const userParams = new URLSearchParams({
       newChat: 'true',
       userId: user.id,
@@ -102,17 +102,17 @@ export default function WorldMapPage() {
       isOnline: user.isOnline.toString()
     });
 
-    // 添加一个小延迟以显示加载状态
+    // Add a small delay to show loading state
     await new Promise(resolve => setTimeout(resolve, 500));
 
-    // 跳转到聊天页面
+    // Navigate to chat page
     router.push(`/chats?${userParams.toString()}`);
   };
 
   useEffect(() => {
     setIsClient(true);
     
-    // Mock data for users around the world - 使用更稳定的头像图片
+    // Mock data for users around the world - using more stable avatar images
     const mockUsers: User[] = [
       {
         id: '1',

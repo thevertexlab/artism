@@ -1,4 +1,4 @@
-// API 配置
+// API Configuration
 export const API_CONFIG = {
   // Backend URLs
   ARTISM_BACKEND: process.env.NEXT_PUBLIC_ARTISM_BACKEND_URL || 'http://localhost:8000',
@@ -7,10 +7,10 @@ export const API_CONFIG = {
   // Legacy support
   BASE_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api',
 
-  // 检查是否在生产环境
+  // Check if in production environment
   IS_PRODUCTION: process.env.NODE_ENV === 'production',
 
-  // Vercel 部署时使用静态数据
+  // Use static data when deploying to Vercel
   USE_STATIC_DATA: process.env.VERCEL === '1' || process.env.NODE_ENV === 'production',
 
   // Request Configuration
@@ -18,7 +18,7 @@ export const API_CONFIG = {
   RETRY_ATTEMPTS: 3,
 };
 
-// API 端点
+// API Endpoints
 export const API_ENDPOINTS = {
   // Artism Backend (FastAPI)
   ARTISTS: '/api/v1/artists',

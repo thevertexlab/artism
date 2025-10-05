@@ -14,21 +14,21 @@ interface GalleryGridProps {
 const GalleryGrid = ({ artworks, onSelect }: GalleryGridProps) => {
   const navigate = useNavigate();
   
-  // 处理图片加载错误
+  // Handle image loading errors
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
     const target = e.target as HTMLImageElement;
-    target.src = 'https://via.placeholder.com/300x200?text=图片加载失败';
+    target.src = 'https://via.placeholder.com/300x200?text=Image+Load+Failed';
   };
 
-  // 跳转到艺术主义详情页
+  // Navigate to art movement detail page
   const navigateToArtMovement = (style: string, styleMovement: string | undefined, e: React.MouseEvent) => {
     e.stopPropagation();
-    // 优先使用styleMovement，如果没有则使用风格名称转换
+    // Prefer styleMovement, if not available use style name conversion
     const artMovementId = styleMovement || style.toLowerCase().replace(/\s+/g, '-');
     navigate(`/art-movement/${artMovementId}`);
   };
 
-  // 跳转到艺术作品详情页
+  // Navigate to artwork detail page
   const navigateToArtworkDetail = (artworkId: string, e: React.MouseEvent) => {
     e.stopPropagation();
     navigate(`/artwork/${artworkId}`);

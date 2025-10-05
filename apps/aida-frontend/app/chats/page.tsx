@@ -22,7 +22,7 @@ interface Chat {
   unread: number;
   online: boolean;
   isVerified: boolean;
-  isNewChat?: boolean; // 标记是否为新创建的聊天
+  isNewChat?: boolean; // Mark if this is a newly created chat
 }
 
 export default function ChatsPage() {
@@ -380,7 +380,7 @@ export default function ChatsPage() {
     }
   };
 
-  // 处理按键事件
+  // Handle key press events
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -388,23 +388,23 @@ export default function ChatsPage() {
     }
   };
 
-  // 处理搜索
+  // Handle search
   const handleChatSearch = () => {
     if (searchTerm.trim()) {
       console.log('Searching chats for:', searchTerm);
-      // 搜索功能已经通过filteredChats实现
+      // Search functionality is already implemented through filteredChats
     }
   };
 
-  // 处理搜索框回车键
+  // Handle search box enter key
   const handleSearchKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       handleChatSearch();
     }
   };
 
-  // 过滤聊天列表
-  const filteredChats = chats.filter(chat => 
+  // Filter chat list
+  const filteredChats = chats.filter(chat =>
     chat.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -414,9 +414,9 @@ export default function ChatsPage() {
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">My Chats</h1>
         
         <div className="flex h-[calc(100vh-200px)] rounded-lg overflow-hidden">
-          {/* 聊天列表 */}
+          {/* Chat list */}
           <div className="w-full sm:w-1/3 bg-white dark:bg-[#1A1A1A] border-r border-gray-200 dark:border-[#333] flex flex-col">
-            {/* 搜索框 */}
+            {/* Search box */}
             <div className="p-4 border-b border-gray-200 dark:border-[#333]">
               <div className="relative flex">
                 <div className="relative flex-1">

@@ -19,59 +19,59 @@ const SettingsPage = () => {
   const { theme, setTheme } = useTheme();
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
 
-  // 切换主题处理函数
+  // Theme toggle handler function
   const handleToggleTheme = () => {
     setTheme(theme === 'dark' ? 'light' : 'dark');
-    toast.success(`主题已更改为${theme === 'dark' ? '浅色' : '深色'}模式`);
+    toast.success(`Theme changed to ${theme === 'dark' ? 'light' : 'dark'} mode`);
   };
 
-  // 切换通知状态
+  // Toggle notification status
   const toggleNotifications = () => {
     setNotificationsEnabled(!notificationsEnabled);
-    toast.success(`通知已${notificationsEnabled ? '关闭' : '开启'}`);
+    toast.success(`Notifications ${notificationsEnabled ? 'disabled' : 'enabled'}`);
   };
 
   const settingsItems = [
     {
       icon: User,
-      label: '账户设置',
-      description: '管理个人资料、注册和登录',
+      label: 'Account Settings',
+      description: 'Manage personal profile, registration and login',
       href: '/settings/account'
     },
     {
       icon: Layout,
-      label: '显示设置',
-      description: '自定义界面显示效果',
+      label: 'Display Settings',
+      description: 'Customize interface display effects',
       href: '/settings/display'
     },
     {
       icon: Bell,
-      label: '通知设置',
-      description: `当前状态: ${notificationsEnabled ? '开启' : '关闭'}`,
+      label: 'Notification Settings',
+      description: `Current status: ${notificationsEnabled ? 'Enabled' : 'Disabled'}`,
       action: toggleNotifications,
       isToggle: true,
       toggleState: notificationsEnabled
     },
     {
       icon: Shield,
-      label: '隐私设置',
-      description: '管理您的隐私选项',
+      label: 'Privacy Settings',
+      description: 'Manage your privacy options',
       href: '/settings/privacy'
     },
     {
       icon: Languages,
-      label: '语言设置',
-      description: '更改显示语言',
+      label: 'Language Settings',
+      description: 'Change display language',
       href: '/settings/language'
     },
   ];
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">设置</h1>
-      
+      <h1 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Settings</h1>
+
       <div className="bg-white dark:bg-[#1A1A1A] rounded-xl shadow overflow-hidden mb-6">
-        {/* 日间/夜间模式切换开关 */}
+        {/* Day/Night mode toggle switch */}
         <div className="p-4 border-b border-gray-200 dark:border-[#333]">
           <div className="flex items-center justify-between w-full">
             <div className="flex items-center">
@@ -79,9 +79,9 @@ const SettingsPage = () => {
                 {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
               </div>
               <div>
-                <h3 className="text-lg font-medium text-gray-900 dark:text-white">主题设置</h3>
+                <h3 className="text-lg font-medium text-gray-900 dark:text-white">Theme Settings</h3>
                 <p className="text-sm text-gray-500 dark:text-[#8899A6]">
-                  当前主题: {theme === 'dark' ? '深色' : '浅色'}
+                  Current theme: {theme === 'dark' ? 'Dark' : 'Light'}
                 </p>
               </div>
             </div>

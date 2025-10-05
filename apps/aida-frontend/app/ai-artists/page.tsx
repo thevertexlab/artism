@@ -6,7 +6,7 @@ import { IconMessageCircle, IconInfoCircle, IconRobot, IconPalette } from '@tabl
 import { Artist } from '@/types/models';
 import { buildApiUrl, API_ENDPOINTS } from '@/src/config/api';
 
-// 扩展Artist类型以包含可能的MongoDB字段
+// Extend Artist type to include possible MongoDB fields
 interface ExtendedArtist extends Artist {
   _id?: string;
   description?: string;
@@ -18,22 +18,22 @@ export default function AIArtistsPage() {
   const [error, setError] = useState<string | null>(null);
   const [interacting, setInteracting] = useState<string | number | null>(null);
 
-  // 加载艺术家数据
+  // Load artist data
   useEffect(() => {
     const loadArtists = async () => {
       try {
-        console.log('开始加载AI艺术家数据...');
-        
-        // 使用新的 API 配置
+        console.log('Starting to load AI artist data...');
+
+        // Use new API configuration
         const apiUrl = buildApiUrl(API_ENDPOINTS.ARTISTS);
         const response = await fetch(apiUrl);
-        
+
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
+
         const data = await response.json();
-        console.log('AI艺术家数据加载成功:', data);
+        console.log('AI artist data loaded successfully:', data);
         
         setArtists(data);
         setError(null);
@@ -48,13 +48,13 @@ export default function AIArtistsPage() {
     loadArtists();
   }, []);
 
-  // 与AI艺术家交互
+  // Interact with AI artist
   const handleInteract = async (artistId: string | number, artistName: string) => {
     setInteracting(artistId);
     try {
-      console.log(`开始与AI艺术家 ${artistName} 交互...`);
-      
-      // 使用新的 API 配置
+      console.log(`Starting interaction with AI artist ${artistName}...`);
+
+      // Use new API configuration
       const apiUrl = buildApiUrl(API_ENDPOINTS.AI_INTERACTION);
       const response = await fetch(apiUrl, {
         method: 'POST',
@@ -73,7 +73,7 @@ export default function AIArtistsPage() {
       
       const result = await response.json();
       
-      // 这里可以打开一个对话框或导航到聊天页面
+      // Here we can open a dialog or navigate to chat page
       alert(`${artistName} says: ${result.response || 'Hello! I would love to discuss art with you.'}`);
     } catch (err) {
       console.error('Error interacting with AI:', err);

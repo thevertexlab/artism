@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { buildApiUrl, API_ENDPOINTS } from '@/src/config/api';
 
 export default function ApiTestPage() {
-  const [result, setResult] = useState<string>('点击按钮测试API');
+  const [result, setResult] = useState<string>('Click button to test API');
   const [loading, setLoading] = useState(false);
 
   const testDirectApi = async () => {

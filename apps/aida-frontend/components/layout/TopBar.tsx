@@ -9,21 +9,21 @@ const TopBar = () => {
   const [isMounted, setIsMounted] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
 
-  // 客户端挂载检测
+  // Client-side mount detection
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
-  // 处理搜索
+  // Handle search
   const handleSearch = () => {
     if (searchTerm.trim()) {
       console.log('Searching for:', searchTerm);
-      // 这里可以添加搜索逻辑，比如跳转到搜索结果页面
+      // Search logic can be added here, such as navigating to search results page
       // window.location.href = `/search?q=${encodeURIComponent(searchTerm)}`;
     }
   };
 
-  // 处理回车键搜索
+  // Handle Enter key search
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       handleSearch();
@@ -35,13 +35,13 @@ const TopBar = () => {
 
   return (
     <div className="fixed top-0 left-0 right-0 z-10 h-16 bg-gray-50 dark:bg-[#0D0D0D] border-b border-gray-100 dark:border-[#1A1A1A] flex items-center">
-      {/* 搜索框容器 - 居中布局，考虑侧边栏宽度 */}
+      {/* Search box container - centered layout, considering sidebar width */}
       <div className={`
         flex-1 flex justify-center
         ${transitionClass}
         ${isExpanded ? 'lg:ml-64' : 'lg:ml-16'}
       `}>
-        {/* 保持与页面内容相同的宽度限制 */}
+        {/* Maintain same width constraints as page content */}
         <div className="w-full max-w-4xl px-4">
           <div className="relative w-full flex">
             <div className="relative flex-1">
@@ -65,7 +65,7 @@ const TopBar = () => {
         </div>
       </div>
 
-      {/* 右侧空白区域 - 提供对称性 */}
+      {/* Right side blank area - provides symmetry */}
       <div className="w-auto md:w-1/4 lg:w-1/5 pr-6"></div>
     </div>
   );

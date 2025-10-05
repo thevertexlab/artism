@@ -29,24 +29,24 @@ const AccountSettingsPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  // 安全设置状态
+  // Security settings state
   const [securitySettings, setSecuritySettings] = useState({
     twoFactorEnabled: false,
     emailNotifications: true,
     loginAlerts: true,
     sessionTimeout: '30'
   });
-  
-  // 用户资料状态
+
+  // User profile state
   const [profile, setProfile] = useState<UserProfile>({
     username: 'current_user',
     email: 'user@example.com',
-    displayName: '当前用户',
-    bio: '这是我的个人简介...',
+    displayName: 'Current User',
+    bio: 'This is my personal bio...',
     isVerified: false
   });
 
-  // 注册表单状态
+  // Registration form state
   const [registerForm, setRegisterForm] = useState({
     username: '',
     email: '',
@@ -56,17 +56,17 @@ const AccountSettingsPage = () => {
     agreeToTerms: false
   });
 
-  // 登录表单状态
+  // Login form state
   const [loginForm, setLoginForm] = useState({
     email: '',
     password: '',
     rememberMe: false
   });
 
-  // 处理用户资料更新
+  // Handle user profile update
   const handleProfileUpdate = () => {
-    // 这里可以添加API调用
-    toast.success('用户资料已更新');
+    // API call can be added here
+    toast.success('User profile updated');
   };
 
   // 密码强度检查
@@ -83,55 +83,55 @@ const AccountSettingsPage = () => {
   const getPasswordStrengthText = (strength: number) => {
     switch (strength) {
       case 0:
-      case 1: return { text: '弱', color: 'text-red-500' };
+      case 1: return { text: 'Weak', color: 'text-red-500' };
       case 2:
-      case 3: return { text: '中等', color: 'text-yellow-500' };
+      case 3: return { text: 'Medium', color: 'text-yellow-500' };
       case 4:
-      case 5: return { text: '强', color: 'text-green-500' };
-      default: return { text: '弱', color: 'text-red-500' };
+      case 5: return { text: 'Strong', color: 'text-green-500' };
+      default: return { text: 'Weak', color: 'text-red-500' };
     }
   };
 
-  // 表单验证
+  // Form validation
   const validateRegisterForm = () => {
     if (!registerForm.username.trim()) {
-      toast.error('请输入用户名');
+      toast.error('Please enter username');
       return false;
     }
     if (!registerForm.email.trim()) {
-      toast.error('请输入邮箱地址');
+      toast.error('Please enter email address');
       return false;
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(registerForm.email)) {
-      toast.error('请输入有效的邮箱地址');
+      toast.error('Please enter a valid email address');
       return false;
     }
     if (!registerForm.password) {
-      toast.error('请输入密码');
+      toast.error('Please enter password');
       return false;
     }
     if (getPasswordStrength(registerForm.password) < 2) {
-      toast.error('密码强度太弱，请使用更复杂的密码');
+      toast.error('Password is too weak, please use a more complex password');
       return false;
     }
     if (registerForm.password !== registerForm.confirmPassword) {
-      toast.error('密码确认不匹配');
+      toast.error('Password confirmation does not match');
       return false;
     }
     if (!registerForm.agreeToTerms) {
-      toast.error('请同意服务条款');
+      toast.error('Please agree to the terms of service');
       return false;
     }
     return true;
   };
 
-  // 处理用户注册
+  // Handle user registration
   const handleRegister = () => {
     if (!validateRegisterForm()) return;
 
-    // 这里可以添加注册API调用
-    toast.success('注册成功！');
-    // 清空表单
+    // Registration API call can be added here
+    toast.success('Registration successful!');
+    // Clear form
     setRegisterForm({
       username: '',
       email: '',
@@ -142,24 +142,24 @@ const AccountSettingsPage = () => {
     });
   };
 
-  // 处理用户登录
+  // Handle user login
   const handleLogin = () => {
-    // 这里可以添加登录API调用
-    toast.success('登录成功！');
+    // Login API call can be added here
+    toast.success('Login successful!');
   };
 
   const tabs = [
-    { id: 'profile', label: '个人资料', icon: User },
-    { id: 'register', label: '注册账户', icon: UserPlus },
-    { id: 'login', label: '登录账户', icon: LogIn },
-    { id: 'security', label: '安全设置', icon: Shield }
+    { id: 'profile', label: 'Profile', icon: User },
+    { id: 'register', label: 'Register', icon: UserPlus },
+    { id: 'login', label: 'Login', icon: LogIn },
+    { id: 'security', label: 'Security', icon: Shield }
   ];
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">账户设置</h1>
-      
-      {/* 标签页导航 */}
+      <h1 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Account Settings</h1>
+
+      {/* Tab navigation */}
       <div className="bg-white dark:bg-[#1A1A1A] rounded-xl shadow overflow-hidden mb-6">
         <div className="border-b border-gray-200 dark:border-[#333]">
           <nav className="flex">

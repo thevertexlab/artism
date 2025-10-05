@@ -8,7 +8,7 @@ const LanguageSettingsPage = () => {
   const [selectedLanguage, setSelectedLanguage] = useState('zh-CN');
   
   const languages = [
-    { code: 'zh-CN', name: '简体中文', local: '简体中文' },
+    { code: 'zh-CN', name: 'Simplified Chinese', local: 'Simplified Chinese' },
     { code: 'en-US', name: 'English (US)', local: 'English (US)' },
     { code: 'ja-JP', name: 'Japanese', local: '日本語' },
     { code: 'ko-KR', name: 'Korean', local: '한국어' },
@@ -24,7 +24,7 @@ const LanguageSettingsPage = () => {
         <Link href="/settings" className="mr-4 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-[#1A1A1A] transition-colors">
           <ArrowLeft className="w-5 h-5 text-gray-600 dark:text-[#8899A6]" />
         </Link>
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">语言设置</h1>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Language Settings</h1>
       </div>
       
       <div className="bg-white dark:bg-[#1A1A1A] rounded-xl shadow overflow-hidden p-6">

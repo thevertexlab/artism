@@ -66,14 +66,14 @@ export default function ArtistDetailPage() {
     loadArtist();
   }, [artistId]);
 
-  // 与AI艺术家交互
+  // Interact with AI artist
   const interactWithAI = async () => {
     if (!artist) return;
-    
+
     setAiLoading(true);
     try {
       const response = await artistService.interactWithAI(
-        "Tell me about your artistic style and influences", 
+        "Tell me about your artistic style and influences",
         artist.id
       );
       setAiResponse(response.response);
@@ -85,13 +85,13 @@ export default function ArtistDetailPage() {
     }
   };
 
-  // 返回艺术家列表
+  // Return to artist list
   const handleBack = () => {
     router.push('/artists');
   };
 
-  // 计算生卒年份显示
-  const yearsText = artist?.birth_year 
+  // Calculate birth and death year display
+  const yearsText = artist?.birth_year
     ? `${artist.birth_year} - ${artist.death_year || 'Present'}`
     : 'Unknown';
 
